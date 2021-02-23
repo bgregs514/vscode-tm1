@@ -11,6 +11,9 @@ A Visual Studio Code Extension for TM1
 - Code snippets for rules and TIs
 - Intellisense for rules and TIs
 
+![Rule Editing](docs/ruleEdit.png)
+![TI Editing](docs/tiEdit.png)
+
 # I want to contribute, how do I start?
 Awesome, let's get you setup with the basic tools and documentation.
 
