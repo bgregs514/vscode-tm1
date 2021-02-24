@@ -1,0 +1,89 @@
+{
+
+    "All":{
+        "prefix":"mdxAll", 
+        "body":[
+            "TM1SubsetAll( [${1:DimName}] )"
+        ]
+    },
+
+    "Root":{
+        "prefix":"mdxRoot", 
+        "body":[
+            "{Filter( {TM1SubsetAll( [${1:DimName}] )}, [${1:DimName}].CurrentMember.Parent.Name='') }"
+        ]
+    },
+
+    "Dimension Leaves":{
+        "prefix":"mdxDimension Leaves", 
+        "body":[
+            "TM1FilterByLevel( TM1SubsetAll( [${1:DimName}] ), 0 )"
+        ]
+    },
+    "Member Children":{
+        "prefix":"mdxMember Children", 
+        "body":[
+            "[${1:DimName}].[${2:MemberName}].Children"
+        ]
+    },
+    "Member Drill To Leaves":{
+        "prefix":"mdxMember Drill To Leaves", 
+        "body":[
+            "TM1DrillDownMember( {[${1:DimName}].[${2:MemberName}]}, ALL, RECURSIVE )"
+        ]
+    },
+    "Member Leaves":{
+        "prefix":"mdxMember Leaves", 
+        "body":[
+            "TM1FilterByLevel( TM1DrillDownMember( { [${1:DimName}].[${2:MemberName}] }, ALL, RECURSIVE ), 0 )"
+        ]
+    },
+    "Member Children Hier":{
+        "prefix":"mdxMember Children Hier", 
+        "body":[
+            "[${1:DimName}].[${2:HierName}].[${3:MemberName}].Children"
+        ]
+    },
+    "Filter By Expression":{
+        "prefix":"mdxFilter By Expression", 
+        "body":[
+            "TM1FilterByPattern( ${1:Expression} ), '%${2:Pattern}%' )"
+        ]
+    },
+    "Filter By Attribute":{
+        "prefix":"mdxFilter By Attribute", 
+        "body":[
+            "Filter( ${1:Expression}, [${2:DimName}].[${3:AttrName}] = '${4:Value}' )"
+        ]
+    },
+
+    "Select Basic":{
+        "prefix":"mdqSelect Basic", 
+        "body":[
+            "SELECT",
+            "   ${1:Expression} ON ROWS",
+            "   ${2:Expression} ON COLUMNS",
+            "",
+            "FROM [${3:CubeName}]"
+        ]
+    },
+    
+    "Select Where":{
+        "prefix":"mdqSelect Where", 
+        "body":[
+            "SELECT",
+            "   ${1:Expression} ON ROWS",
+            "   ${2:Expression} ON COLUMNS",
+            "",
+            "FROM [${3:CubeName}]",
+            "",
+            "WHERE [${4:CubeName}].(",
+            "    [${5:DimName}].[${6:MemberName}],",
+            "    [${7:DimName}].[${8:MemberName}],",
+            "    ${9:...}",
+            ")"
+        ]
+    }
+    
+    
+}

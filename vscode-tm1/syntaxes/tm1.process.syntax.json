@@ -1,0 +1,88 @@
+{
+    "scopeName": "source.tm1process",
+    "name": "TM1Process",
+    "comment": "TM1 Process Syntax",
+    "fileTypes": ["pro"],
+    "foldingStartMarker": ".*(\\().*$",
+    "foldingStopMarker": ".*(\\)).*$",
+
+    "patterns": [
+
+        {"name": "keyword.attribute.tm1process", "match": "(?i)\\b(AttrDelete|AttrInsert|ATTRN|ATTRNL|AttrPutN|AttrPutS|ATTRS|ATTRSL|ChoreAttrDelete|ChoreAttrInsert|ChoreAttrN|ChoreAttrNL|ChoreAttrPutN|ChoreAttrPutS|ChoreAttrS|ChoreAttrSL|CreateHierarchyByAttribute|CubeAttrDelete|CubeAttrInsert|CubeATTRN|CubeATTRNL|CubeAttrPutN|CubeAttrPutS|CubeATTRS|CubeATTRSL|DimensionAttrDelete|DimensionAttrInsert|DimensionATTRN|DimensionATTRNL|DimensionAttrPutN|DimensionAttrPutS|DimensionATTRS|DimensionATTRSL|ElementAttrDelete|ElementAttrInsert|ElementAttrN|ElementATTRNL|ElementAttrPutN|ElementAttrPutS|ElementAttrS|ElementATTRSL|HierarchyATTRN|HierarchyATTRNL|HierarchyAttrPutN|HierarchyAttrPutS|HierarchyATTRS|HierarchyATTRSL|HierarchySubsetAttrDelete|HierarchySubsetAttrInsert|HierarchySubsetATTRN|HierarchySubsetATTRNL|HierarchySubsetAttrPutN|HierarchySubsetAttrPutS|HierarchySubsetATTRS|HierarchySubsetATTRSL|ProcessAttrDelete|ProcessAttrInsert|ProcessAttrN|ProcessAttrNL|ProcessAttrPutN|ProcessAttrPutS|ProcessAttrS|ProcessAttrSL|SubsetAttrDelete|SubsetAttrInsert|SubsetATTRN|SubsetATTRNL|SubsetAttrPutN|SubsetAttrPutS|SubsetATTRS|SubsetATTRSL|ViewAttrDelete|ViewAttrInsert|ViewAttrN|ViewAttrNL|ViewAttrPutN|ViewAttrPutS|ViewAttrS|ViewAttrSL)\\b(?=\\()"},
+        {"name": "keyword.chore.tm1process", "match": "(?i)\\b(ChoreError|ChoreQuit|ChoreRollback|SetChoreVerboseMessages)\\b(?=\\()"},
+        {"name": "keyword.consolidated.tm1process", "match": "(?i)\\b(ConsolidatedAvg|ConsolidatedCount|ConsolidateChildren|ConsolidatedCountUnique|ConsolidatedMax|ConsolidatedMin)\\b(?=\\()"},
+        {"name": "keyword.cube.tm1process", "match": "(?i)\\b(AddCubeDependency|CellGetN|CellGetS|CellIncrementN|CellIsUpdateable|CellPutN|CellPutProportionalSpread|CellPutS|CubeClearData|CubeCreate|CubeDestroy|CubeDimensionCountGet|CubeExists|CubeGetLogChanges|CubeSaveData|CubeSetConnParams|CubeSetLogChanges|CubeTimeLastUpdated|CubeUnload|DB|ISLEAF|ISUNDEFINEDCELLVALUE|UNDEF|UNDEFINEDCELLVALUE|UNDEFVALS)\\b(?=\\()"},
+        {"name": "keyword.datetime.tm1process", "match": "(?i)\\b(DATE|DATES|DAY|DAYNO|FormatDate|MONTH|NewDateFormatter|NOW|ParseDate|TIME|TIMST|TIMVL|TODAY|YEAR)\\b(?=\\()"},
+        {"name": "keyword.dimension.tm1process", "match": "(?i)\\b(DimensionCreate|DimensionDeleteAllElements|DimensionDeleteElements|DimensionDestroy|DimensionElementComponentAdd|DimensionElementComponentAddDirect|DimensionElementComponentDelete|DimensionElementComponentDeleteDirect|DimensionElementDelete|DimensionElementDeleteDirect|DimensionElementExists|DimensionElementInsert|DimensionElementInsertDirect|DimensionElementPrincipalName|DimensionExists|DimensionSortOrder|DimensionTimeLastUpdated|DimensionTopElementInsert|DimensionTopElementInsertDirect|DimensionUpdateDirect|DIMNM|DIMSIZ|DNEXT|DNLEV|TABDIM)\\b(?=\\()"},
+        {"name": "keyword.element.tm1process", "match": "(?i)\\b(DIMIX|DTYPE|ELCOMP|ELCOMPN|ElementComponent|ElementComponentCount|ElementCount|ElementFirst|ElementIndex|ElementIsAncestor|ElementIsComponent|ElementIsParent|ElementLevel|ElementName|ElementNext|ElementParent|ElementParentCount|ElementType|ElementWeight|ELISANC|ELISCOMP|ELISPAR|ELLEV|ELPAR|ELPARN|ELWEIGHT|LevelCount)\\b(?=\\()"},
+        {"name": "keyword.file.tm1process", "match": "(?i)\\b(ASCIIDelete|ASCIIOutput|FileExists|LogOutput|SetInputCharacterSet|SetOutputCharacterSet|SetOutputEscapeDoubleQuote|TextOutput|WildcardFileSearch)\\b(?=\\()"},
+        {"name": "keyword.financial.tm1process", "match": "(?i)\\b(FV|PAYMT|PV)\\b(?=\\()"},
+        {"name": "keyword.global.tm1process", "match": "(?i)\\b(DataMinorErrorCount|MetadataMinorErrorCount|NumericGlobalVariable|ProcessReturnCode|PrologMinorErrorCount|StringGlobalVariable)\\b(?=\\()"},
+        {"name": "keyword.hierarchy.tm1process", "match": "(?i)\\b(DimensionHierarchyCreate|HierarchyContainsAllLeaves|HierarchyCreate|HierarchyDeleteAllElements|HierarchyDeleteElements|HierarchyDestroy|HierarchyElementComponentAdd|HierarchyElementComponentAddDirect|HierarchyElementComponentDelete|HierarchyElementComponentDeleteDirect|HierarchyElementDelete|HierarchyElementDeleteDirect|HierarchyElementExists|HierarchyElementInsert|HierarchyElementInsertDirect|HierarchyElementPrincipalName|HierarchyExists|HierarchyHasOrphanedLeaves|HierarchySortOrder|HierarchyTimeLastUpdated|HierarchyTopElementInsert|HierarchyTopElementInsertDirect|HierarchyUpdateDirect)\\b(?=\\()"},
+        {"name": "keyword.local.tm1process", "match": "(?i)\\b(DatasourceASCIIDecimalSeparator|DatasourceASCIIDelimiter|DatasourceASCIIHeaderRecords|DatasourceASCIIQuoteCharacter|DatasourceASCIIThousandSeparator|DatasourceCubeView|DatasourceDimensionSubset|DatasourceNameForClient|DatasourceNameForServer|DataSourceODBOCatalog|DataSourceODBOConnectionString|DataSourceODBOCubeName|DataSourceODBOHierarchyName|DataSourceODBOLocation|DataSourceODBOProvider|DataSourceODBOSAPClientID|DataSourceODBOSAPClientLanguage|DatasourcePassword|DatasourceQuery|DatasourceType|DatasourceUsername|MinorErrorLogMax|NValue|OnMinorErrorDoItemSkip|SValue|Value_Is_String)\\b(?=\\()"},
+        {"name": "keyword.math.tm1process", "match": "(?i)\\b(ABS|ACOS|ASIN|ATAN|COS|EXP|INT|ISUND|LN|LOG|MAX|MIN|MOD|RAND|ROUND|ROUNDP|SIGN|SIN|SQRT|TAN)\\b(?=\\()"},
+        {"name": "keyword.misc.tm1process", "match": "(?i)\\b(AddInfoCubeRestriction|DataSourceSAPUsingRoleAuths|DataSourceSAPUsingTexts|ExecuteJavaN|ExecuteJavaS|Expand|NumberToString|NumberToStringEx|RefreshMdxHierarchy|StringToNumber|StringToNumberEx)\\b(?=\\()"},
+        {"name": "keyword.odbc.tm1process", "match": "(?i)\\b(ODBCClose|ODBCOpen|ODBCOPENEx|ODBCOutput|SetODBCUnicodeInterface)\\b(?=\\()"},
+        {"name": "keyword.process.tm1process", "match": "(?i)\\b(ExecuteCommand|ExecuteProcess|GetProcessErrorFileDirectory|GetProcessErrorFilename|GetProcessName|ItemReject|ItemSkip|ProcessBreak|ProcessError|ProcessExists|ProcessExitByBreak|ProcessExitByChoreQuit|ProcessExitByChoreRollback|ProcessExitByChoreRollback|ProcessExitByProcessRollback|ProcessExitByProcessRollback|ProcessExitByQuit|ProcessExitMinorError|ProcessExitNormal|ProcessExitOnInit|ProcessExitSeriousError|ProcessExitWithMessage|ProcessQuit|ProcessRollback|RunProcess|Synchronized)\\b(?=\\()"},
+        {"name": "keyword.reservation.tm1process", "match": "(?i)\\b(CubeDataReservationAcquire|CubeDataReservationGet|CubeDataReservationGetConflicts|CubeDataReservationRelease|CubeDataReservationReleaseAll|CubeDRAcquire|CubeDRGet|CubeDRGetConflicts|CubeDRRelease|CubeDRReleaseAll)\\b(?=\\()"},
+        {"name": "keyword.rules.tm1process", "match": "(?i)\\b(CubeProcessFeeders|CubeRuleAppend|CubeRuleDestroy|DeleteAllPersistentFeeders|ForceSkipCheck|RuleLoadFromFile)\\b(?=\\()"},
+        {"name": "keyword.sandbox.tm1process", "match": "(?i)\\b(GetUseActiveSandboxProperty|ServerActiveSandboxGet|ServerActiveSandboxSet|ServerSandboxClone|ServerSandboxCreate|ServerSandboxDiscardAllChanges|ServerSandboxesDelete|ServerSandboxExists|ServerSandboxGet|ServerSandboxListCountGet|ServerSandboxMerge|SetUseActiveSandboxProperty)\\b(?=\\()"},
+        {"name": "keyword.security.tm1process", "match": "(?i)\\b(TM1User|AddClient|AddGroup|AssignClientToGroup|AssignClientPassword|AssociateCAMIDToGroup|CellSecurityCubeCreate|CellSecurityCubeDestroy|DeleteClient|DeleteGroup|ElementSecurityGet|ElementSecurityPut|HierarchyElementSecurityGet|HierarchyElementSecurityPut|RemoveCAMIDAssociation|RemoveCAMIDAssociationFromGroup|RemoveClientFromGroup|SetHierarchyGroupsSecurity|SetHierarchyElementGroupsSecurity|SetDimensionGroupsSecurity|SetElementGroupsSecurity|SecurityOverlayGlobalLockCell|SecurityOverlayCreateGlobalDefault|SecurityOverlayDestroyGlobalDefault|SecurityOverlayGlobalLockNode|SecurityRefresh)\\b(?=\\()"},
+        {"name": "keyword.server.tm1process", "match": "(?i)\\b(BatchUpdateFinish|BatchUpdateFinishWait|BatchUpdateStart|DisableBulkLoadMode|EnableBulkLoadMode|SaveDataAll|ServerShutdown)\\b(?=\\()"},
+        {"name": "keyword.subset.tm1process", "match": "(?i)\\b(HierarchySubsetAliasSet|HierarchySubsetCreate|HierarchySubsetDeleteAllElements|HierarchySubsetDestroy|HierarchySubsetElementDelete|HierarchySubsetElementExists|HierarchySubsetElementGetIndex|HierarchySubsetElementInsert|HierarchySubsetExists|HierarchySubsetGetElementName|HierarchySubsetGetSize|HierarchySubsetIsAllSet|HierarchySubsetMDXGet|HierarchySubsetMDXSet|SubsetAliasSet|SubsetCreate|SubsetCreateByMDX|SubsetDeleteAllElements|SubsetDestroy|SubsetElementDelete|SubsetElementExists|SubsetElementGetIndex|SubsetElementInsert|SubsetExists|SubsetExpandAboveSet|SubsetFormatStyleSet|SubsetGetElementName|SubsetGetSize|SubsetIsAllSet|SubsetMDXGet|SubsetMDXSet)\\b(?=\\()"},
+        {"name": "keyword.text.tm1process", "match": "(?i)\\b(CAPIT|CHAR|CODE|DELET|FILL|INSRT|LONG|LOWER|NUMBR|SCAN|STR|SUBST|TRIM|UPPER)\\b(?=\\()"},
+        {"name": "keyword.view.tm1process", "match": "(?i)\\b(DisableMTQViewConstruct|EnableMTQViewConstruct|PublishView|ViewColumnDimensionSet|ViewColumnSuppressZeroesSet|ViewConstruct|ViewCreate|ViewCreateByMDX|ViewDestroy|ViewExists|ViewExtractFilterByTitlesSet|ViewExtractSkipCalcsSet|ViewExtractSkipConsolidatedStringsSet|ViewExtractSkipRuleValuesSet|ViewExtractSkipZeroesSet|ViewMDXGet|ViewMDXSet|ViewRowDimensionSet|ViewRowSuppressZeroesSet|ViewSubsetAssign|ViewSuppressZeroesSet|ViewTitleDimensionSet|ViewTitleElementSet|ViewZeroOut)\\b(?=\\()"},
+
+        {"name": "keyword.section.tm1process", "match": "(?i)\\b(CONTINUE|STET|FEEDERS|FEEDSTRINGS|SKIPCHECK)\\b(?=\\()"},
+        {"name": "keyword.control.tm1process", "match": "(?i)\\b(If)\\b(?=\\()"},
+        {"name": "keyword.control.tm1process", "match": "(?i)\\b(If|While|Else|ElseIf|End|EndIf)\\b"},
+
+        {"name": "comment.line.pound.tm1process","match": "(#).*$\\n?","captures": { "0": { "name": "punctuation.definition.comment.tm1process" } }},
+
+        {"name": "keyword.operator.tm1process", "match": "(=|<>|>|<|@=|@<>|@>|@<)"},
+
+        {"name": "entity.reference.dimension.tm1process", "match": "(![^,)]+\\w)"},
+
+        {
+            "name": "string.quoted.single.tm1process",
+            "begin": "'",
+            "beginCaptures": { "0": { "name": "punctuation.definition.quotes.begin.single.tm1process" } },
+            "end": "'",
+            "endCaptures": { "0": { "name": "punctuation.definition.quotes.end.single.tm1process" } }
+        },
+
+        {
+            "begin": "{",
+            "beginCaptures": { "0": { "name": "punctuation.definition.brackets.begin.brace.tm1process" } },
+            "end": "}",
+            "endCaptures": { "0": { "name": "punctuation.definition.brackets.end.brace.tm1process" } },
+            "patterns": [{
+                "include": "$self"
+            }]
+        },
+        {
+            "begin": "\\[",
+            "beginCaptures": { "0": { "name": "punctuation.definition.brackets.begin.bracket.tm1process" } },
+            "end": "\\]",
+            "endCaptures": { "0": { "name": "punctuation.definition.brackets.end.bracket.tm1process" } },
+            "patterns": [{
+                "include": "$self"
+            }]
+        },
+        {
+            "begin": "\\(",
+            "beginCaptures": { "0": { "name": "punctuation.definition.brackets.begin.paren.tm1process" } },
+            "end": "\\)",
+            "endCaptures": { "0": { "name": "punctuation.definition.brackets.end.paren.tm1process" } },
+            "patterns": [{
+                "include": "$self"
+            }]
+        },
+        
+        {"name": "constant.numeric.floating-point.proc", "match": "(\\.\\d+([Ee][-+]\\d+)?i?)\\b|\\b\\d+\\.\\d*(([Ee][-+]\\d+)?i?\\b)?"},
+		{"name": "constant.numeric.integer.proc", "match": "\\b((0x[0-9a-fA-F]+)|(0[0-7]+i?)|(\\d+([Ee]\\d+)?i?)|(\\d+[Ee][-+]\\d+i?))\\b"},
+
+        {"name": "punctuation.terminator.statement.tm1process", "match": "\\;"}
+    ]    
+
+}

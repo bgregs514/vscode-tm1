@@ -1,0 +1,190 @@
+{
+	"name": "vscode-tm1",
+	"displayName": "vscode-tm1",
+	"description": "A Visual Studio Extension for TM1",
+	"version": "0.0.1",
+	"engines": {
+		"vscode": "^1.53.0"
+	},
+	"categories": [
+		"Other"
+	],
+	"activationEvents": [
+		"*"
+	],
+	"main": "./out/extension.js",
+	"contributes": {
+		"configuration": {
+			"title": "vscode-tm1",
+			"properties": {
+				"vscode-tm1.username": {
+					"type": "string",
+					"default": "",
+					"description": "Username for TM1 login"
+				},
+				"vscode-tm1.password": {
+					"type": "string",
+					"default": "",
+					"description": "Password for TM1 login"
+				},
+				"vscode-tm1.port": {
+					"type": "string",
+					"default": "",
+					"description": "HTTPPort found in tm1s.cfg"
+				},
+				"vscode-tm1.cam": {
+					"type": "boolean",
+					"default": true,
+					"description": "Using CAM authentication?"
+				},
+				"vscode-tm1.namespace": {
+					"type": "string",
+					"default": "",
+					"description": "Namespace for CAM authentication"
+				},
+				"vscode-tm1.url": {
+					"type": "string",
+					"default": "",
+					"description": "Base URL for the TM1 Rest API"
+				}
+			}
+		},
+		"languages": [
+			{
+				"id": "tm1rule",
+				"aliases": [
+					"TM1 Rule",
+					"tm1rule"
+				],
+				"extensions": [
+					".rux"
+				],
+				"configuration": "./language-configuration.json"
+			},
+			{
+				"id": "tm1process",
+				"aliases": [
+					"TM1 Process",
+					"tm1process"
+				],
+				"extensions": [
+					".pro"
+				],
+				"configuration": "./language-configuration.json"
+			}
+		],
+		"grammars": [
+			{
+				"language": "tm1rule",
+				"scopeName": "source.tm1rule",
+				"path": "./syntaxes/tm1.rule.syntax.json"
+			},
+			{
+				"language": "tm1process",
+				"scopeName": "source.tm1process",
+				"path": "./syntaxes/tm1.process.syntax.json"
+			}
+		],
+		"snippets": [
+			{
+				"language": "tm1process",
+				"path": "./snippets/cdc.process.codeblocks.json"
+			},
+			{
+				"language": "tm1rule",
+				"path": "./snippets/tm1.rule.snippets.json"
+			},
+			{
+				"language": "tm1rule",
+				"path": "./snippets/tm1.mdx.snippets.json"
+			},
+			{
+				"language": "tm1process",
+				"path": "./snippets/tm1.process.snippets.json"
+			},
+			{
+				"language": "tm1process",
+				"path": "./snippets/tm1.process.codeblocks.json"
+			},
+			{
+				"language": "tm1process",
+				"path": "./snippets/tm1.mdx.snippets.json"
+			}
+		],
+		"themes": [
+			{
+				"label": "CarpeDatum Dark",
+				"uiTheme": "vs-dark",
+				"path": "./themes/CDCDark.theme.json"
+			}
+		],
+		"viewsContainers": {
+			"activitybar": [
+				{
+					"id": "tm1View",
+					"title": "vscode-tm1",
+					"icon": "media/cube.svg"
+				}
+			]
+		},
+		"views": {
+			"tm1View": [
+				{
+					"id": "cubList",
+					"name": "Cubes",
+					"visibility": "collapsed"
+				},
+				{
+					"id": "procList",
+					"name": "Processes",
+					"visibility": "collapsed"
+				}
+			]
+		},
+		"commands": [
+			{
+				"command": "vscode-tm1.refreshObjectList",
+				"title": "Refresh Object List"
+			},
+			{
+				"command": "vscode-tm1.saveObject",
+				"title": "Save Object",
+				"icon": "media/save.svg"
+			}
+		],
+		"menus": {
+			"view/item/context": [
+				{
+					"command": "vscode-tm1.saveObject",
+					"when": "view == cubList && vscode-tm1:saveObjectIcon == true",
+					"group": "inline"
+				}
+			]
+		}
+	},
+	"scripts": {
+		"vscode:prepublish": "npm run compile",
+		"compile": "tsc -p ./",
+		"watch": "tsc -watch -p ./",
+		"pretest": "npm run compile && npm run lint",
+		"lint": "eslint src --ext ts",
+		"test": "node ./out/test/runTest.js"
+	},
+	"devDependencies": {
+		"@types/glob": "^7.1.3",
+		"@types/mocha": "^8.0.4",
+		"@types/node": "^12.11.7",
+		"@types/vscode": "^1.53.0",
+		"@typescript-eslint/eslint-plugin": "^4.14.1",
+		"@typescript-eslint/parser": "^4.14.1",
+		"eslint": "^7.19.0",
+		"glob": "^7.1.6",
+		"mocha": "^8.2.1",
+		"typescript": "^4.1.3",
+		"vscode-test": "^1.5.0"
+	},
+	"dependencies": {
+		"axios": "^0.21.1",
+		"https": "^1.0.0"
+	}
+}

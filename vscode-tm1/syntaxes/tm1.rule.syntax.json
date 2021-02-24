@@ -1,0 +1,73 @@
+{
+    "scopeName": "source.tm1rule",
+    "name": "TM1Rule",
+    "comment": "TM1 Rules Syntax",
+    "fileTypes": ["rux"],
+    "foldingStartMarker": ".*(\\().*$",
+    "foldingStopMarker": ".*(\\)).*$",
+
+    "patterns": [
+        {"name": "keyword.attribute.tm1rule", "match": "(?i)\\b(ATTRN|ATTRS|ElementAttrN|ElementAttrS)\\b(?=\\()"},
+        {"name": "keyword.consolidated.tm1rule", "match": "(?i)\\b(ConsolidatedMin|ConsolidatedMax|ConsolidatedAvg|ConsolidatedCount|ConsolidatedCountUnique)\\b(?=\\()"},
+        {"name": "keyword.cube.tm1rule", "match": "(?i)\\b(CellValueN|CellValueS|DB|ISLEAF|ISUNDEFINEDCELLVALUE|UNDEF|UNDEFINEDCELLVALUE|UNDEFVALS)\\b(?=\\()"},
+        {"name": "keyword.datetime.tm1rule", "match": "(?i)\\b(DATE|DATES|DAY|DAYNO|MONTH|NOW|TIME|TIMST|TIMVL|TODAY|YEAR)\\b(?=\\()"},
+        {"name": "keyword.dimension.tm1rule", "match": "(?i)\\b(ConsolidateChildren|DIMNM|DIMSIZ|DNEXT|DNLEV|TABDIM)\\b(?=\\()"},
+        {"name": "keyword.element.tm1rule", "match": "(?i)\\b(DIMIX|DTYPE|ELCOMP|ELCOMPN|ELISANC|ELISCOMP|ELISPAR|ELLEV|ELPAR|ELPARN|ELWEIGHT|ElementIndex|ElementName|ElementCount|ElementNext|LevelCount|ElementType|ElementComponent|ElementComponentCount|ElementIsAncestor|ElementIsComponent|ElementIsParent|ElementLevel|ElementParent|ElementParentCount|ElementWeight)\\b(?=\\()"},
+        {"name": "keyword.financial.tm1rule", "match": "(?i)\\b(FV|PAYMT|PV)\\b(?=\\()"},
+        {"name": "keyword.math.tm1rule", "match": "(?i)\\b(ABS|ACOS|ASIN|ATAN|COS|EXP|INT|ISUND|LN|LOG|MAX|MIN|MOD|RAND|ROUND|ROUNDP|SIGN|SIN|SQRT|TAN)\\b(?=\\()"},
+        {"name": "keyword.misc.tm1rule", "match": "(?i)(CONTINUE|STET)\\b"},
+        {"name": "keyword.text.tm1rule", "match": "(?i)\\b(CAPIT|CHAR|CODE|DELET|FILL|INSRT|LONG|LOWER|NUMBR|SCAN|STR|SUBST|TRIM|UPPER)\\b(?=\\()"},
+
+        {"name": "section.control.tm1rule", "match": "(FEEDERS|FEEDSTRINGS|SKIPCHECK)"},
+
+        {"name": "comment.line.pound.tm1rule","match": "(#).*$\\n?","captures": { "0": { "name": "punctuation.definition.comment.tm1rule" } }},
+
+        {"name": "keyword.operator.tm1rule", "match": "(=|<>|>|<|@=|@<>|@>|@<)"},
+
+        {"name": "keyword.control.tm1rule", "match": "(?i)\\b(If)\\b(?=\\()"},
+
+		{"name": "constant.numeric.floating-point.tm1rule", "match": "(\\.\\d+([Ee][-+]\\d+)?i?)\\b|\\b\\d+\\.\\d*(([Ee][-+]\\d+)?i?\\b)?"},
+		{"name": "constant.numeric.integer.tm1rule", "match": "\\b((0x[0-9a-fA-F]+)|(0[0-7]+i?)|(\\d+([Ee]\\d+)?i?)|(\\d+[Ee][-+]\\d+i?))\\b"},
+
+        {"name": "entity.reference.dimension.tm1rule", "match": "(![^,)]*\\w)"},
+
+        {
+            "name": "string.quoted.single.tm1",
+            "begin": "'",
+            "beginCaptures": { "0": { "name": "punctuation.definition.quotes.begin.single.tm1rule" } },
+            "end": "'",
+            "endCaptures": { "0": { "name": "punctuation.definition.quotes.end.single.tm1rule" } }
+        },
+
+        {
+            "begin": "{",
+            "beginCaptures": { "0": { "name": "punctuation.definition.brackets.begin.brace.tm1rule" } },
+            "end": "}",
+            "endCaptures": { "0": { "name": "punctuation.definition.brackets.end.brace.tm1rule" } },
+            "patterns": [ 
+                { "include": "$self" } 
+            ]
+        },
+        {
+            "begin": "\\[",
+            "beginCaptures": { "0": { "name": "punctuation.definition.brackets.begin.bracket.tm1rule" } },
+            "end": "\\]",
+            "endCaptures": { "0": { "name": "punctuation.definition.brackets.end.bracket.tm1rule" } },
+            "patterns": [ 
+                { "include": "$self" } 
+            ]
+        },
+        {
+            "begin": "\\(",
+            "beginCaptures": { "0": { "name": "punctuation.definition.brackets.begin.paren.tm1rule" } },
+            "end": "\\)",
+            "endCaptures": { "0": { "name": "punctuation.definition.brackets.end.paren.tm1rule" } },
+            "patterns": [ 
+                { "include": "$self" } 
+            ]
+        },
+        
+        {"name": "punctuation.terminator.statement.tm1rule", "match": "\\;"}
+    ]    
+
+}

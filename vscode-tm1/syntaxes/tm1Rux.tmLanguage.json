@@ -1,0 +1,148 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "TM1 Rule",
+	"scopeName": "source.rux",
+	"patterns": [
+		{
+			"include": "#keywords"
+		}
+	],
+	"repository": {
+		"keywords": {
+			"patterns": [
+				{
+					"include": "#attributes"
+				},
+				{
+					"include": "#consolidated"
+				},
+				{
+					"include": "#cube-data"
+				},
+				{
+					"include": "#date"
+				},
+				{
+					"include": "#dimension"
+				},
+				{
+					"include": "#element"
+				},
+				{
+					"include": "#financial"
+				},
+				{
+					"include": "#hierarchy"
+				},
+				{
+					"include": "#logical"
+				},
+				{
+					"include": "#mathematical"
+				},
+				{
+					"include": "#text"
+				},
+				{
+					"include": "#misc"
+				}
+			]
+		},
+		"attributes": {
+			"patterns": [
+				{
+					"name": "keyword.control.attributes.tm1Rux",
+					"match": "(?i)\\b(attrn|attrs|cubeattrn|cubeattrs|dimensionattrn|dimensionattrs|elementattrn|elementattrs)\\b"
+				}
+			]
+		},
+		"consolidated": {
+			"patterns": [
+				{
+					"name": "keyword.control.consolidated.tm1Rux",
+					"match": "(?i)\\b(consolidatedavg|consolidatedchildren|consolidatedcount|consolidatedcountunique|consolidatedmax|consolidatedmin)\\b"
+				}
+			]
+		},
+		"cube-data": {
+			"patterns": [
+				{
+					"name": "keyword.control.cube-data.tm1Rux",
+					"match": "(?i)\\b(cellvalues|cellvaluen|db|isleaf|isundefinedcellvalue|undef|undefinedcellvalue|undefvals)\\b"
+				}
+			]
+		},
+		"date": {
+			"patterns": [
+				{
+					"name": "keyword.control.date.tm1Rux",
+					"match": "(?i)\\b(date|dates|day|dayno|month|now|time|timst|timvl|today|year)\\b"
+				}
+			]
+		},
+		"dimension": {
+			"patterns": [
+				{
+					"name": "keyword.control.dimension.tm1Rux",
+					"match": "(?i)\\b(dimix|dimnm|dimsiz|dnext|dnlev|dtype|tabdim)\\b"
+				}
+			]
+		},
+		"element": {
+			"patterns": [
+				{
+					"name": "keyword.control.element.tm1Rux",
+					"match": "(?i)\\b(elcomp|elcompn|elementcomponent|elementcomponentcount|elementcount|elementfirst|elementindex|elementisancestor|elementiscomponent|elementisparent|elementlevel|elementname|elementnext|elementparent|elementparentcount|elementtype|elementweight|elisanc|eliscomp|elispar|ellev|elpar|elparn|elweight|levelcount)\\b"
+				}
+			]
+		},
+		"financial": {
+			"patterns": [
+				{
+					"name": "keyword.control.financial.tm1Rux",
+					"match": "(?i)\\b(fv|paymt|pv)\\b"
+				}
+			]
+		},
+		"hierarchy": {
+			"patterns": [
+				{
+					"name": "keyword.control.hierarchy.tm1Rux",
+					"match": "(?i)\\b(hierarchy|hierarchycount|hierarchyindex|hierarchyn)\\b"
+				}
+			]
+		},
+		"logical": {
+			"patterns": [
+				{
+					"name": "keyword.control.logical.tm1Rux",
+					"match": "(?i)\\b(continue|if|stet)\\b"
+				}
+			]
+		},
+		"mathematical": {
+			"patterns": [
+				{
+					"name": "keyword.control.mathematical.tm1Rux",
+					"match": "(?i)\\b(abs|acos|asin|atan|cos|exp|int|isund|ln|log|max|min|mod|rand|round|roundp|sign|sin|sqrt|tan)\\b"
+				}
+			]
+		},
+		"text": {
+			"patterns": [
+				{
+					"name": "keyword.control.text.tm1Rux",
+					"match": "(?i)\\b(capit|char|code|delet|fill|insrt|long|lower|number|scan|str|subst|trim|upper)\\b"
+				}
+			]
+		},
+		"misc": {
+			"patterns": [
+				{
+					"name": "keyword.control.misc.tm1Rux",
+					"match": "(?i)\\b(feeders|feedstrings|skipcheck)\\b"
+				}
+			]
+		}
+	}
+}

@@ -1,0 +1,173 @@
+{
+	"sys_Create View": {
+		"prefix": "xsys_Create View",
+		"description": "Create a View using sys_Create View",
+		"body": [
+			"#------------------------------------------------------------------------------",
+			"#  Create the source view",
+			"#------------------------------------------------------------------------------",
+			"#   { = Item is the name of an existing subset",
+			"#   ! = Drill down to the leaves of the specified element",
+			"#   * = All elements in the dimension",
+			"#   # = Only elements at level # are included in subset (i.e. #0 for Level 0)",
+			"#   & = Use the supplied MDX to create the subset",
+			"nReturnCode = ",
+			"ExecuteProcess( 'sys_Create View'",
+			"    , 'pCubeName', ${1:sCubeName}",
+			"    , 'pViewName', ${2:sViewName}",
+			"    , 'pStaticSubsets', 1",
+			"    , 'pElement1', '${3:#0}'",
+			"    , 'pElement2', '${4:#0}'",
+			"    , 'pElement3', '${5:#0}'",
+			"    , 'pElement4', '${6:#0}'",
+			"    , 'pElement5', '${7:#0}'",
+			"    , 'pElement6', '${8:#0}'",
+			"    , 'pElement7', '${9:#0}' ",
+			"    , 'pElement8', '${10:#0}'",
+			"    , 'pElement9', '${11:#0}'",
+			"    , 'pElement10', '${12:#0}'",
+			");",
+			"",
+			"# ---- Make sure the view was created ok",
+			"IF( nReturnCode <> ProcessExitNormal() );",
+			"   LogOutput( 'ERROR', 'sys_Create View did not complete successfullly' );",
+			"   ProcessError;",
+			"ENDIF;",
+			"",
+			"# --- Set the view properties",
+			"ViewExtractSkipCalcsSet( sCubeName, sViewName, 1 );",
+			"ViewExtractSkipZeroesSet( sCubeName, sViewName, 1 );",
+			"ViewExtractSkipRuleValuesSet( sCubeName, sViewName, 0 );"
+		]
+	},
+
+	"sys_Clear Version": {
+		"prefix": "xsys_Clear Version",
+		"description": "Executes the sys_Clear Version process to clear a Scenario",
+		"body": [
+			"ExecuteProcess( 'sys_Clear Version'",
+			"    , 'pVersion', ${1:sScenarioName}",
+			"    , 'pCubeName', ${2:sCubeName}",
+			"    , 'pVersionDim', '${3:Scenario}'",
+			"    , 'pItem1', '${4:}'",
+			"    , 'pItem1Dim', '${5:}'",
+			"    , 'pItem2', '${6:}'",
+			"    , 'pItem2Dim', '${7:}'",
+			");"
+		]
+	},
+
+	"sys_Copy Version": {
+		"prefix": "xsys_Copy Version",
+		"description": "Executes the sys_Copy Version process",
+		"body": [
+			"ExecuteProcess( 'sys_Copy Version'",
+			"    , 'pSourceVersion', ${1:sSourceScenarioName}",
+			"    , 'pDestVersion', ${2:sTargetScenarioName}",
+			"    , 'pCubeName', ${3:sCubeName}",
+			"    , 'pClearBeforeCopy', ${4:0}",
+			"    , 'pVersionDim', '${5:Scenario}'",
+			"    , 'pItem1', '${6:}'",
+			"    , 'pItem1Dim', '${7:}'",
+			"    , 'pItem2', '${8:}'",
+			"    , 'pItem2Dim', '${9:}'",
+			");"
+		]
+	},
+
+	"sys_Delete View": {
+		"prefix": "xsys_Delete View",
+		"description": "Executes the sys_Delete View process",
+		"body": [ "ExecuteProcess( 'sys_Delete View', 'pCubeName', ${1:sCubeName}, 'pViewName', ${2:sViewName} );" ]
+	},
+
+	"sys_Export Data": {
+		"prefix": "xsys_Export Data",
+		"description": "Executes the sys_Export Data process. Be sure to specify the full file path with the name.",
+		"body": [
+			"ExecuteProcess( 'sys_Export Data', 'pFileName', ${1:sFileName}, 'pCubeName', ${2:sCubeName}, 'pViewName', ${3:sViewName} );"
+		]
+	},
+
+	"sys_Import Data": {
+		"prefix": "xsys_Import Data",
+		"description": "Executes the sys_Import Data process. Be sure to specify the full file path with the name.",
+		"body": [
+			"ExecuteProcess( 'sys_Import Data', 'pFileName', ${1:sFileName}, 'pCubeName', ${2:sCubeName}, 'pClearView', ${3:sViewName}, 'pAdditive', ${4:1} );"
+		]
+	},
+
+	"sys_Export Version": {
+		"prefix": "xsys_Export Version",
+		"description": "Executes the sys_Export Version process",
+		"body": [
+			"ExecuteProcess( 'sys_Export Version'",
+			"    , 'pSourceVersion', ${1:sSourceScenarioName}",
+			"    , 'pCubeName', ${2:sCubeName}",
+			"    , 'pVersionDim', '${3:Scenario}'",
+			"    , 'pItem1', '${4:}'",
+			"    , 'pItem1Dim', '${5:}'",
+			"    , 'pItem2', '${6:}'",
+			"    , 'pItem2Dim', '${7:}'",
+			");"
+		]
+	},
+
+	"sys_Clone Dimension": {
+		"prefix": "xsys_Clone Dimension",
+		"description": "Executes the sys_Clone Dimension process",
+		"body": [
+			"ExecuteProcess( 'sys_Clone Dimension'",
+			"    , 'pSourceDim', ${1:sSourceDimName}",
+			"    , 'pSourceSubset', ${2:sSubsetNameBlankforAll}",
+			"    , 'pDestDim', ${3:sTargetDimName}",
+			"    , 'pAttr', '${4:YorN}'",
+			"    , 'pDelete', '${5:YorN}'",
+			");"
+		]
+	},
+
+	"sys_Import Version": {
+		"prefix": "xsys_Import Version",
+		"description": "Executes the sys_Import Version process",
+		"body": [
+			"ExecuteProcess( 'sys_Import Version'",
+			"    , 'pFileName', ${1:sFileName}",
+			"    , 'pCubeName', ${2:sCubeName}",
+			"    , 'pClearView', ${3:sViewName}",
+			"    , 'pDestScenario', ${4:sTargetScenarioName}",
+			"    , 'pScenarioDim', '${5:Scenario}'",
+			"    , 'pAdditive', '${6:1}'",
+			");"
+		]
+	},
+
+	"sys_Remove Dimension Structure": {
+		"prefix": "xsys_Remove Dimension Structure",
+		"description": "Executes the sys_Remove Dimension Structure process",
+		"body": [
+			"ExecuteProcess( 'sys_Remove Dimension Structure'",
+			"    , 'pDimName', ${1:sDimName}",
+			"    , 'pOrphanElement', ${2:sOrphanElement}",
+			"    , 'pConsolidatedElement', '${3:}'",
+			"    , 'pIncludeConsolidated', '${4:}'",
+			");"
+		]
+	},
+
+	"Job Control": {
+		"prefix": "xJob Control",
+		"description": "Add job control section to prolog",
+		"body": [
+			"#==============================================================================",
+			"#                            JOB CONTROL SECTION",
+			"#==============================================================================",
+			"",
+			"If( CubeExists('sys_Job Status') );",
+			"Else;",
+			"    LogOutput( 'INFO', Expand( 'sProcessName: %pParam1%, %pParam2%' ) );",
+			"EndIf;",
+			""
+		]	
+	}
+}
