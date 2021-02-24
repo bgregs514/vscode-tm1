@@ -24,7 +24,13 @@ A few tools are needed to get up a running; primarly [Yeoman](https://yeoman.io/
 npm install -g yo generator-code
 ```
 
-Once everything is installed and this repo is cloned, you can edit the extension code by running:
+Clone the repo, enter into the `vscode-tm1` folder, open a PowerShell terminal (ensure the terminal session has a pwd inside the folder), and run:
+```
+npm install
+```
+This will install all of the node dependencies for the project.
+
+Once everything is installed, you can edit the extension code going back to the root git folder (the one with the folder named `vscode-tm1` and running:
 ```
 code ./vscode-tm1
 ```
