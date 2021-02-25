@@ -1,7 +1,7 @@
 .DS_Store
 npm-debug.log
 Thumbs.db
-vsc-extension-quickstart
+vsc-extension-quickstart.md
 */node_modules/
 */out/
 */.vs/
