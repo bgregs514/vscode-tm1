@@ -1,77 +1,105 @@
 import * as vscode from 'vscode';
-import axios, { AxiosRequestConfig, AxiosResponse, Method } from 'axios';
-import * as https from 'https';
-import {TM1Return, TM1ObjectProvider, TM1TreeItem} from "./classDefs";
+import {TM1ObjectProvider, GlobalVars} from "./classDefs";
+import {tm1RestCall} from "./netDefs";
 
+GlobalVars.g_OpenDocuments = [];
+
+/*
+* activate: The main VS Code extension function; where it all starts
+*/
 export function activate(context: vscode.ExtensionContext)
 {
-	console.log("activated");
-	/* Register commands */
 	registerCommands(context);
-
-	/* Load the Object List */
+	initVars();
 	setupObjectLists();
-
-	/* Register text change event */
-	vscode.workspace.onDidChangeTextDocument(changeEvent => {
-		vscode.commands.executeCommand("setContext", "vscode-tm1:saveObjectIcon", true);
-	});
 }
 
+/*
+* initVars: Initialize global variables and other misc. things that don't belong in registerCommands
+*/
+function initVars()
+{
+	/* Move g_OpenDocuments to the global context for use in package.json */
+	vscode.commands.executeCommand("setContext", "vscode-tm1:openDocuments", GlobalVars.g_OpenDocuments);
+}
+
+/*
+* registerCommands: Register commands that the user (or another extension) may want to call directly
+*/
 function registerCommands(context: vscode.ExtensionContext)
 {
-	/* TODO: Create object list refresh command */
+	/* TODO: Tree view refresh command */
+	//vscode.commands.registerCommand("vscode-tm1.refreshView", () => {setupObjectLists});
 
-	/* Register the tree view item save command */
+	/* Tree view item save command */
 	vscode.commands.registerCommand("vscode-tm1.saveObject", () => {console.log("saved")});
 }
 
+/*
+* setupObjectLists: Create the TreeViews that contain the Cube and Process object lists
+*/
 function setupObjectLists()
 {
-	console.log("refreshing");
-
 	let apiCall = "Cubes?$select=Name";
-	tm1RestCall(apiCall, "GET").then(response => {
-		//console.log([response]["value"]);
-		const cubList = vscode.window.createTreeView("cubList", {
-			canSelectMany: false,
-			showCollapseAll: true,
-			treeDataProvider: new TM1ObjectProvider([response.value][0])
-		});
-		cubList.onDidChangeSelection(() => {
-			//console.log(cubList.selection);
-			setEditorText("rule", cubList.selection[0].Name);
-		});
+
+	const objectProvider = new TM1ObjectProvider(apiCall);
+	const cubList = vscode.window.createTreeView("cubList", {
+		canSelectMany: false,
+		showCollapseAll: true,
+		treeDataProvider: objectProvider
 	});
-	apiCall = "Processes?$select=Name";
-	tm1RestCall(apiCall, "GET").then(response => {
-		const procList = vscode.window.createTreeView("procList", {
-			canSelectMany: false,
-			showCollapseAll: true,
-			treeDataProvider: new TM1ObjectProvider([response.value][0])
-		});
-		procList.onDidChangeSelection(() => {
-			setEditorText("proc", procList.selection[0].Name);
-		});
+	cubList.onDidChangeSelection(() => {
+		var selection = cubList.selection;
+		
+		setEditorText("rule", selection[0].Name);
+		updateOpenDocuments(selection[0].Name, objectProvider);
 	});
+
+	/* TODO: Disabling TIs for now; need to focus just on rules to get the base working */
+	//apiCall = "Processes?$select=Name";
+	// tm1RestCall(apiCall, "GET").then(response => {
+	// 	const procList = vscode.window.createTreeView("procList", {
+	// 		canSelectMany: false,
+	// 		showCollapseAll: true,
+	// 		treeDataProvider: new TM1ObjectProvider([response.value][0])
+	// 	});
+	// 	procList.onDidChangeSelection(() => {
+	// 		setEditorText("proc", procList.selection[0].Name);
+	// 	});
+	// });
 }
 
+/*
+* updateOpenDocuments: Adjust g_OpenDocuments to account for changes, and refresh the TM1ObjectProvider
+* to display the "Save" icon
+*/
+function updateOpenDocuments(selectionName: string, objectProvider: TM1ObjectProvider)
+{
+	GlobalVars.g_OpenDocuments.push(selectionName);
+	objectProvider.refresh();
+}
+
+/*
+* createNewDocument: On TreeView selection change, create a new tab for the TM1 object and display it
+* with the appropriate language file
+*/
 function createNewDocument(type: string, tm1Content: string)
 {
 	/* Well shit...can't actually change the tab names (yet): https://github.com/microsoft/vscode/issues/41909 */
 
-	/* Define the content and language for the new document */
 	var options = {
 		content: tm1Content,
 		language: type == "rule" ? "tm1rule" : "tm1process"
 	};
 
-	/* Create the new document and display it */
 	vscode.workspace.openTextDocument(options).then(document => {
 		vscode.window.showTextDocument(document);
 	});
 }
 
+/*
+* setEditorText: Assemble the apiCall, retrieve data from the TM1 instance, and create a new document
+*/
 function setEditorText(type: string, queryObj?: string)
 {
 	let apiCall = "";
@@ -93,31 +121,7 @@ function setEditorText(type: string, queryObj?: string)
 	});
 }
 
-async function tm1RestCall(apiCall: string, apiType: Method): Promise<TM1Return>
-{
-	var settings = vscode.workspace.getConfiguration("vscode-tm1");
-
-	var encodedCreds = "CAMNamespace " + Buffer.from(settings.get("username") + ":" + settings.get("password") + ":" + settings.get("namespace")).toString("base64");
-	var baseURL = "https://" + settings.get("url") + ":" + settings.get("port") + "/api/v1/";
-	
-	const config =  {
-		httpsAgent: new https.Agent({
-			rejectUnauthorized: false,
-		}),
-		headers: {
-			"Content-Type": "application/json",
-			"Authorization": encodedCreds
-		},
-		method: apiType,
-		url: encodeURI(baseURL + apiCall)
-	};
-	
-	return axios(config).then(response => {
-		console.log(response.data);
-		return response.data;
-	}).catch(error => {
-		console.log(error);
-	});
-}
-
+/*
+* deactivate: Leaving here for now, probably won't need this though
+*/
 export function deactivate() {}

@@ -28,8 +28,11 @@
 			"#==============================================================================",
 			"sProcessName = GetProcessName();",
 			"sTimeStamp = TIMST( NOW, '\\Y-\\m-\\d(\\h\\i\\s)' );",
+<<<<<<< HEAD
 			"sTempName = Expand( '_tmp_%sProcessName%_%sTimeStamp% ') | NumbertoString(RAND());",
+=======
 			"sTempName = '_tmp_' | sProcessName | '_' | sTimeStamp;",
+>>>>>>> 6cb98c78f8bdd4463f8c70167342804b9738ccd9
 			"",
 			"sLogPath = '..\\Logs\\';",
 			"sLogFile = sLogPath | sTempName | '.log';",

@@ -143,8 +143,8 @@
 		},
 		"commands": [
 			{
-				"command": "vscode-tm1.refreshObjectList",
-				"title": "Refresh Object List"
+				"command": "vscode-tm1.refreshView",
+				"title": "Refresh Tree View"
 			},
 			{
 				"command": "vscode-tm1.saveObject",
@@ -156,7 +156,7 @@
 			"view/item/context": [
 				{
 					"command": "vscode-tm1.saveObject",
-					"when": "view == cubList && vscode-tm1:saveObjectIcon == true",
+					"when": "view == cubList && viewItem == open",
 					"group": "inline"
 				}
 			]
