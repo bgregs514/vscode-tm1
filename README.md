@@ -15,7 +15,7 @@ A Visual Studio Code Extension for TM1
 ![TI Editing](docs/tiEdit.png)
 
 # I want to contribute, how do I start?
-Awesome, let's get you setup with the basic tools and documentation.
+Awesome, let's get you setup with the basic tools and documentation.  You can start by reading this project's [CONTRIBUTING](docs/CONTRIBUTING.md) page.
 
 This VS Code extension is written using [TypeScript](https://www.typescriptlang.org/docs/), which brings proper classes and strongly typed objects to the front-end space.  While traditional JavaScript will run perfectly fine in this environment, please try to make use of the benefits TypeScript brings as much as possible.
 
