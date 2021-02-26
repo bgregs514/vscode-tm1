@@ -32,20 +32,20 @@
 					"default": "",
 					"description": "HTTPPort found in tm1s.cfg"
 				},
-				"vscode-tm1.cam": {
-					"type": "boolean",
-					"default": true,
-					"description": "Using CAM authentication?"
+				"vscode-tm1.integrated_security_mode": {
+					"type": "int",
+					"default": 5,
+					"description": "TM1 Integrated Security Mode (1,2,3,4,5)"
 				},
 				"vscode-tm1.namespace": {
 					"type": "string",
 					"default": "",
 					"description": "Namespace for CAM authentication"
 				},
-				"vscode-tm1.url": {
+				"vscode-tm1.hostname": {
 					"type": "string",
 					"default": "",
-					"description": "Base URL for the TM1 Rest API"
+					"description": "TM1 host name to construct url"
 				}
 			}
 		},
