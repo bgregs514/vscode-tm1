@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import {tm1RestCall} from "./netDefs";
+import {tm1Req} from "./netDefs";
 
 /*
 * GlobalVars: Class export allows for treating members as variables instead of aliases, which
@@ -29,10 +29,10 @@ export class TM1ObjectProvider implements vscode.TreeDataProvider<TM1Return> {
 	private _onDidChangeTreeData: vscode.EventEmitter<TM1Return | null> = new vscode.EventEmitter<any>();
 	readonly onDidChangeTreeData: vscode.Event<TM1Return | null> = this._onDidChangeTreeData.event;
 	
-	private apiCall;
-	constructor(apiCall: string) {
+	private tm1ReqObject;
+	constructor(tm1ReqObject: tm1Req.TM1ReqObject) {
 		//console.log(data);
-		this.apiCall = apiCall;
+		this.tm1ReqObject = tm1ReqObject;
 	}
 
 	/* TODO: Fire accepts an additional parameter to refresh children of the tree view, this
@@ -53,7 +53,7 @@ export class TM1ObjectProvider implements vscode.TreeDataProvider<TM1Return> {
 		if (element) {
 			return Promise.resolve(element.children);
 		} else {
-			return Promise.resolve(tm1RestCall(this.apiCall, "GET").then(response => {
+			return Promise.resolve(tm1Req.tm1RestCall(this.tm1ReqObject).then(response => {
 				var data: any = response.value!;
 				return data;
 			}));

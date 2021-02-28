@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import {TM1ObjectProvider, GlobalVars} from "./classDefs";
-import {tm1RestCall} from "./netDefs";
+import {tm1Req} from "./netDefs";
 
 GlobalVars.g_OpenDocuments = [];
 
@@ -40,9 +40,10 @@ function registerCommands(context: vscode.ExtensionContext)
 */
 function setupObjectLists()
 {
-	let apiCall = "Cubes?$select=Name";
+	var apiConfig: tm1Req.TM1ReqObject = new tm1Req.TM1ReqObject();
+	apiConfig.apiCall = "Cubes?$select=Name";
 
-	const objectProvider = new TM1ObjectProvider(apiCall);
+	const objectProvider = new TM1ObjectProvider(apiConfig);
 	const cubList = vscode.window.createTreeView("cubList", {
 		canSelectMany: false,
 		showCollapseAll: true,
@@ -102,14 +103,15 @@ function createNewDocument(type: string, tm1Content: string)
 */
 function setEditorText(type: string, queryObj?: string)
 {
-	let apiCall = "";
+	var apiConfig: tm1Req.TM1ReqObject = new tm1Req.TM1ReqObject();
+
 	if (type == "rule") {
-		apiCall = "Cubes('" + queryObj + "')?$select=Rules";
+		apiConfig.apiCall = "Cubes('" + queryObj + "')?$select=Rules";
 	} else {
-		apiCall = "Processes('" + queryObj + "')";
+		apiConfig.apiCall = "Processes('" + queryObj + "')";
 	}
 
-	tm1RestCall(apiCall, "GET").then(response => {
+	tm1Req.tm1RestCall(apiConfig).then(response => {
 		var content;
 		if (type == "rule") {
 			content = response.Rules!;
