@@ -33,7 +33,7 @@
 					"description": "HTTPPort found in tm1s.cfg"
 				},
 				"vscode-tm1.integrated_security_mode": {
-					"type": "int",
+					"type": "number",
 					"default": 5,
 					"description": "TM1 Integrated Security Mode (1,2,3,4,5)"
 				},
