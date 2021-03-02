@@ -45,8 +45,9 @@ export namespace tm1Req {
 		var settings = vscode.workspace.getConfiguration("vscode-tm1");
 		var encodedCreds = "";
 		// can try getting the integrated mode somehow better in future
-		switch ( settings.get("integrated_security_mode"))	
+		switch (settings.get("integrated_security_mode"))	
 		{
+			case 2:
 			case 1:
 				encodedCreds = "Basic " + Buffer.from(settings.get("username") + ":" + settings.get("password")).toString("base64");
 				break;
