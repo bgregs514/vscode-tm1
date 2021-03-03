@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
-import {TM1ObjectProvider, GlobalVars} from "./classDefs";
-import {tm1Req} from "./netDefs";
+import {GlobalVars} from "./core/classDefs";
+import * as init from "./core/init"
 
 GlobalVars.g_OpenDocuments = [];
 
@@ -9,118 +9,9 @@ GlobalVars.g_OpenDocuments = [];
 */
 export function activate(context: vscode.ExtensionContext)
 {
-	registerCommands(context);
-	initVars();
-	setupObjectLists();
-}
-
-/*
-* initVars: Initialize global variables and other misc. things that don't belong in registerCommands
-*/
-function initVars()
-{
-	/* Move g_OpenDocuments to the global context for use in package.json */
-	vscode.commands.executeCommand("setContext", "vscode-tm1:openDocuments", GlobalVars.g_OpenDocuments);
-}
-
-/*
-* registerCommands: Register commands that the user (or another extension) may want to call directly
-*/
-function registerCommands(context: vscode.ExtensionContext)
-{
-	/* TODO: Tree view refresh command */
-	//vscode.commands.registerCommand("vscode-tm1.refreshView", () => {setupObjectLists});
-
-	/* Tree view item save command */
-	vscode.commands.registerCommand("vscode-tm1.saveObject", () => {console.log("saved")});
-}
-
-/*
-* setupObjectLists: Create the TreeViews that contain the Cube and Process object lists
-*/
-function setupObjectLists()
-{
-	var apiConfig: tm1Req.TM1ReqObject = new tm1Req.TM1ReqObject();
-	apiConfig.apiCall = "Cubes?$select=Name";
-
-	const objectProvider = new TM1ObjectProvider(apiConfig);
-	const cubList = vscode.window.createTreeView("cubList", {
-		canSelectMany: false,
-		showCollapseAll: true,
-		treeDataProvider: objectProvider
-	});
-	cubList.onDidChangeSelection(() => {
-		var selection = cubList.selection;
-		
-		setEditorText("rule", selection[0].Name);
-		updateOpenDocuments(selection[0].Name, objectProvider);
-	});
-
-	/* TODO: Disabling TIs for now; need to focus just on rules to get the base working */
-	//apiCall = "Processes?$select=Name";
-	// tm1RestCall(apiCall, "GET").then(response => {
-	// 	const procList = vscode.window.createTreeView("procList", {
-	// 		canSelectMany: false,
-	// 		showCollapseAll: true,
-	// 		treeDataProvider: new TM1ObjectProvider([response.value][0])
-	// 	});
-	// 	procList.onDidChangeSelection(() => {
-	// 		setEditorText("proc", procList.selection[0].Name);
-	// 	});
-	// });
-}
-
-/*
-* updateOpenDocuments: Adjust g_OpenDocuments to account for changes, and refresh the TM1ObjectProvider
-* to display the "Save" icon
-*/
-function updateOpenDocuments(selectionName: string, objectProvider: TM1ObjectProvider)
-{
-	GlobalVars.g_OpenDocuments.push(selectionName);
-	objectProvider.refresh();
-}
-
-/*
-* createNewDocument: On TreeView selection change, create a new tab for the TM1 object and display it
-* with the appropriate language file
-*/
-function createNewDocument(type: string, tm1Content: string)
-{
-	/* Well shit...can't actually change the tab names (yet): https://github.com/microsoft/vscode/issues/41909 */
-
-	var options = {
-		content: tm1Content,
-		language: type == "rule" ? "tm1rule" : "tm1process"
-	};
-
-	vscode.workspace.openTextDocument(options).then(document => {
-		vscode.window.showTextDocument(document);
-	});
-}
-
-/*
-* setEditorText: Assemble the apiCall, retrieve data from the TM1 instance, and create a new document
-*/
-function setEditorText(type: string, queryObj?: string)
-{
-	var apiConfig: tm1Req.TM1ReqObject = new tm1Req.TM1ReqObject();
-
-	if (type == "rule") {
-		apiConfig.apiCall = "Cubes('" + queryObj + "')?$select=Rules";
-	} else {
-		apiConfig.apiCall = "Processes('" + queryObj + "')";
-	}
-
-	tm1Req.tm1RestCall(apiConfig).then(response => {
-		var content;
-		if (type == "rule") {
-			content = response.Rules!;
-		} else {
-			content = response.PrologProcedure!;
-		}
-		
-		createNewDocument(type, content);
-	});
+	init.registerCommands(context);
+	init.initVars();
+	init.setupObjectLists();
 }
 
 /*

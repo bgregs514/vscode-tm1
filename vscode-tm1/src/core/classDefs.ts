@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import {tm1Req} from "./netDefs";
+import {tm1Req} from "../net/netDefs";
 
 /*
 * GlobalVars: Class export allows for treating members as variables instead of aliases, which
@@ -11,23 +11,39 @@ import {tm1Req} from "./netDefs";
 export class GlobalVars {
 	public static g_OpenDocuments:any[];
 }
+/*
+* TM1ViewHelper: Helper class to easily access treeView and dataProvider handles
+*/
+export class TM1ViewHelper {
+	public readonly treeView: vscode.TreeView<any>;
+	public readonly dataProvider: TM1ObjectProvider;
+	
+	constructor(viewName: string, tm1ReqObject: tm1Req.TM1ReqObject)
+	{
+		this.dataProvider = new TM1ObjectProvider(tm1ReqObject);
+		this.treeView = vscode.window.createTreeView(viewName, {
+			canSelectMany: false,
+			showCollapseAll: true,
+			treeDataProvider: this.dataProvider
+		});
+	}
+}
 
 /*
-* TM1Return: Supports the return types for TM1 rules and TIs
+* TM1ViewConfig: Defines the properties that a vscode-tm1 view should have
 */
-export interface TM1Return {
-	value?: Array<any>,
-	Rules?: string
-        PrologProcedure?: string,
+export interface TM1ViewConfig {
+	viewName: string,
+	language: string
 }
 
 /*
 * TM1ObjectProvider: The main class that provides the data for the tree views (Cube and Process lists)
 */
-export class TM1ObjectProvider implements vscode.TreeDataProvider<TM1Return> {
+export class TM1ObjectProvider implements vscode.TreeDataProvider<tm1Req.TM1Return> {
 	/* Hook up the refresh event to the TreeDataProvider */
-	private _onDidChangeTreeData: vscode.EventEmitter<TM1Return | null> = new vscode.EventEmitter<any>();
-	readonly onDidChangeTreeData: vscode.Event<TM1Return | null> = this._onDidChangeTreeData.event;
+	private _onDidChangeTreeData: vscode.EventEmitter<tm1Req.TM1Return | null> = new vscode.EventEmitter<any>();
+	readonly onDidChangeTreeData: vscode.Event<tm1Req.TM1Return | null> = this._onDidChangeTreeData.event;
 	
 	private tm1ReqObject;
 	constructor(tm1ReqObject: tm1Req.TM1ReqObject) {
@@ -53,7 +69,7 @@ export class TM1ObjectProvider implements vscode.TreeDataProvider<TM1Return> {
 		if (element) {
 			return Promise.resolve(element.children);
 		} else {
-			return Promise.resolve(tm1Req.tm1RestCall(this.tm1ReqObject).then(response => {
+			return Promise.resolve(this.tm1ReqObject.execute().then(response => {
 				var data: any = response.value!;
 				return data;
 			}));
