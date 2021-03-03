@@ -51,20 +51,26 @@ export namespace tm1Req {
 		{
 			var settings = vscode.workspace.getConfiguration("vscode-tm1");
 			var encodedCreds = "";
-			// can try getting the integrated mode somehow better in future
-			switch (settings.get("integrated_security_mode"))	
+			var userName = settings.get("defaultConnection.Username");
+			var password = settings.get("defaultConnection.Password");
+			var CAMNamespace = settings.get("defaultConnection.CAMNamespace");
+			var hostname = settings.get("defaultConnection.Hostname");
+			var httpPortNumber = settings.get("defaultConnection.HTTPPortNumber");
+			var integratedSecurityMode = settings.get("defaultConnection.IntegratedSecurityMode")
+			switch (integratedSecurityMode)	
 			{
-				case 2:
-				case 1:
-					encodedCreds = "Basic " + Buffer.from(settings.get("username") + ":" + settings.get("password")).toString("base64");
+				case "2":
+				case "1":
+					encodedCreds = "Basic " + Buffer.from(userName+ ":" + password).toString("base64");
 					break;
-				case 5:
-					encodedCreds = "CAMNamespace " + Buffer.from(settings.get("username") + ":" + settings.get("password") + ":" + settings.get("namespace")).toString("base64");
+				case "4":
+				case "5":
+					encodedCreds = "CAMNamespace " + Buffer.from(userName + ":" + password + ":" + CAMNamespace).toString("base64");
 					break;
 				default:
-					encodedCreds = "Negotiate " + Buffer.from(settings.get("username") + ":" + settings.get("password") + ":" + settings.get("namespace")).toString("base64");
+					encodedCreds = "Negotiate " + Buffer.from(userName + ":" + password + ":" + CAMNamespace).toString("base64");
 			}
-			var baseURL = "https://" + settings.get("hostname") + ":" + settings.get("port") + "/api/v1/";
+			var baseURL = "https://" + hostname + ":" + httpPortNumber + "/api/v1/";
 			
 			const config =  {
 				httpsAgent: new https.Agent({

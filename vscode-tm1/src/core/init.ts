@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import * as tm1CoreDefs from "../core/classDefs";
 import {tm1Req} from "../net/netDefs";
 import * as tm1Core from "../core/core"
+import * as connectionManager from "./../connectionManager";
 
 /*
 * initVars: Initialize global variables and other misc. things that don't belong in registerCommands
@@ -22,6 +23,9 @@ export function registerCommands(context: vscode.ExtensionContext)
 
 	/* Tree view item save command */
 	vscode.commands.registerCommand("vscode-tm1.saveObject", () => {console.log("saved")});
+
+	vscode.commands.registerCommand("vscode-tm1.openAddConnectionScreen", () => {connectionManager.openConnectionSettings()});
+	vscode.commands.registerCommand("vscode-tm1.refreshConnectionView", () => {connectionManager.listConnections()});
 }
 
 /*
