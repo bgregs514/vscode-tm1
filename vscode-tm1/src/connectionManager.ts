@@ -1,7 +1,5 @@
-
 import {commands,workspace, window} from 'vscode';
-import {TM1ObjectProvider, GlobalVars} from "./core/classDefs";
-import {tm1Req} from "./net/netDefs";
+
 /*
 export class connectionManager
 {

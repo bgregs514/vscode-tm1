@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import {tm1Req} from "../net/netDefs";
+import * as tm1NetDefs from "../net/netDefs";
 
 /*
 * GlobalVars: Class export allows for treating members as variables instead of aliases, which
@@ -9,7 +9,8 @@ import {tm1Req} from "../net/netDefs";
 *	g_OpenDocuments: Used to dynamically track which files are open at any given time
 */
 export class GlobalVars {
-	public static g_OpenDocuments:DocumentObject[];
+	public static g_OpenDocuments: DocumentObject[];
+	public static g_Config: tm1NetDefs.TM1Config;
 }
 
 /*
@@ -30,7 +31,7 @@ export class TM1ViewHelper {
 	public readonly treeView: vscode.TreeView<any>;
 	public readonly dataProvider: TM1ObjectProvider;
 	
-	constructor(viewName: string, tm1ReqObject: tm1Req.TM1ReqObject)
+	constructor(viewName: string, tm1ReqObject: tm1NetDefs.TM1ReqObject)
 	{
 		this.dataProvider = new TM1ObjectProvider(tm1ReqObject);
 		this.treeView = vscode.window.createTreeView(viewName, {
@@ -52,13 +53,13 @@ export interface TM1ViewConfig {
 /*
 * TM1ObjectProvider: The main class that provides the data for the tree views (Cube and Process lists)
 */
-export class TM1ObjectProvider implements vscode.TreeDataProvider<tm1Req.TM1Return> {
+export class TM1ObjectProvider implements vscode.TreeDataProvider<tm1NetDefs.TM1Return> {
 	/* Hook up the refresh event to the TreeDataProvider */
-	private _onDidChangeTreeData: vscode.EventEmitter<tm1Req.TM1Return | null> = new vscode.EventEmitter<any>();
-	readonly onDidChangeTreeData: vscode.Event<tm1Req.TM1Return | null> = this._onDidChangeTreeData.event;
+	private _onDidChangeTreeData: vscode.EventEmitter<tm1NetDefs.TM1Return | null> = new vscode.EventEmitter<any>();
+	readonly onDidChangeTreeData: vscode.Event<tm1NetDefs.TM1Return | null> = this._onDidChangeTreeData.event;
 	
 	private tm1ReqObject;
-	constructor(tm1ReqObject: tm1Req.TM1ReqObject) {
+	constructor(tm1ReqObject: tm1NetDefs.TM1ReqObject) {
 		//console.log(data);
 		this.tm1ReqObject = tm1ReqObject;
 	}

@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as tm1Core from "../core/classDefs";
 import * as tm1CoreDefs from "../core/classDefs";
-import {tm1Req} from "../net/netDefs";
+import * as tm1NetDefs from "../net/netDefs";
 
 /*
 * updateOpenDocuments: Adjust g_OpenDocuments to account for changes, and refresh the TM1ObjectProvider
@@ -42,7 +42,7 @@ export function createNewDocument(type: string, tm1Content: string): Thenable<vs
 */
 export function getTM1Object(type: string, queryObj?: string): Promise<string>
 {
-	var req: tm1Req.TM1ReqObject = new tm1Req.TM1ReqObject();
+	var req: tm1NetDefs.TM1ReqObject = new tm1NetDefs.TM1ReqObject();
 
 	if (type == "rule") {
 		req.apiCall = "Cubes('" + queryObj + "')?$select=Rules";
@@ -66,7 +66,7 @@ export function getTM1Object(type: string, queryObj?: string): Promise<string>
 */
 export function sendTM1Object(type: string, queryObj: string, data: string)
 {	
-        var req: tm1Req.TM1ReqObject = new tm1Req.TM1ReqObject(undefined, tm1Req.TM1APIMethod.PATCH);
+        var req: tm1NetDefs.TM1ReqObject = new tm1NetDefs.TM1ReqObject(undefined, tm1NetDefs.TM1APIMethod.PATCH);
 	var dataObj = {};
 	
         if (type == "rule") {

@@ -1,7 +1,8 @@
 import * as vscode from 'vscode';
-import * as tm1CoreDefs from "../core/classDefs";
-import {tm1Req} from "../net/netDefs";
 import * as tm1Core from "../core/core"
+import * as tm1CoreDefs from "../core/classDefs";
+import * as tm1NetDefs from "../net/netDefs";
+import * as tm1Net from "../net/net";
 import * as connectionManager from "./../connectionManager";
 
 /*
@@ -9,8 +10,12 @@ import * as connectionManager from "./../connectionManager";
 */
 export function initVars()
 {
-	/* Move g_OpenDocuments to the global context for use in package.json */
-	vscode.commands.executeCommand("setContext", "vscode-tm1:openDocuments", tm1CoreDefs.GlobalVars.g_OpenDocuments);
+	/* g_OpenDocuments */
+        tm1CoreDefs.GlobalVars.g_OpenDocuments = [];
+
+        /* g_Config */
+        tm1CoreDefs.GlobalVars.g_Config = <tm1NetDefs.TM1Config>{};
+        tm1Net.initTM1Config();
 }
 
 /*
@@ -36,11 +41,11 @@ export function registerCommands()
 */
 export function setupObjectLists()
 {
-	var apiConfigs: tm1Req.TM1ReqObject[] = [];
+	var apiConfigs: tm1NetDefs.TM1ReqObject[] = [];
 	var viewConfigs: tm1CoreDefs.TM1ViewConfig[] = [];
 	
 	/* Cube View */
-	var cubApiConfig: tm1Req.TM1ReqObject = new tm1Req.TM1ReqObject();
+	var cubApiConfig: tm1NetDefs.TM1ReqObject = new tm1NetDefs.TM1ReqObject();
 	cubApiConfig.apiCall = "Cubes?$select=Name";
 	apiConfigs.push(cubApiConfig);
 
@@ -51,7 +56,7 @@ export function setupObjectLists()
 	viewConfigs.push(cubViewConfig);
 
 	/* Process View */
-	var procApiConfig: tm1Req.TM1ReqObject = new tm1Req.TM1ReqObject();
+	var procApiConfig: tm1NetDefs.TM1ReqObject = new tm1NetDefs.TM1ReqObject();
 	procApiConfig.apiCall = "Processes?$select=Name";
 	apiConfigs.push(procApiConfig);
 
@@ -70,7 +75,7 @@ export function setupObjectLists()
 /*
 * createTreeView: Create a TreeView with provided configs and attach an onDidChangeSelection event listener
 */
-function createTreeView(viewConfig: tm1CoreDefs.TM1ViewConfig, tm1ReqObject: tm1Req.TM1ReqObject)
+function createTreeView(viewConfig: tm1CoreDefs.TM1ViewConfig, tm1ReqObject: tm1NetDefs.TM1ReqObject)
 {
 	var view = new tm1CoreDefs.TM1ViewHelper(viewConfig.viewName, tm1ReqObject);
 
