@@ -9,8 +9,20 @@ import {tm1Req} from "../net/netDefs";
 *	g_OpenDocuments: Used to dynamically track which files are open at any given time
 */
 export class GlobalVars {
-	public static g_OpenDocuments:any[];
+	public static g_OpenDocuments:DocumentObject[];
 }
+
+/*
+* DocumentObject: Used to describe the properties of g_OpenDocuments
+* TODO: Add an attribute to flag when text has changed; this can then be used to determine if the save icon should be
+*	displayed
+*/
+export interface DocumentObject {
+	name: string,
+	type: string,
+	docHandle: vscode.TextDocument
+}
+
 /*
 * TM1ViewHelper: Helper class to easily access treeView and dataProvider handles
 */
@@ -83,8 +95,22 @@ export class TM1ObjectProvider implements vscode.TreeDataProvider<tm1Req.TM1Retu
 export class TM1TreeItem extends vscode.TreeItem{
 	constructor(label: string) {
 		super(label);
-		console.log("created");
 	}
 
-	contextValue = GlobalVars.g_OpenDocuments.includes(this.label) ? "open" : "closed";
+	contextValue = this.getOpenDocs();
+
+	getOpenDocs(): string
+	{
+		var status = "closed";
+		var docs = GlobalVars.g_OpenDocuments;
+
+		for (var i = 0; i < docs.length; i++) {
+			if (docs[i].name == this.label) {
+				status = "open";
+				break;
+			}
+		}
+
+		return status;
+	}
 }

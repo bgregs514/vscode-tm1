@@ -16,13 +16,16 @@ export function initVars()
 /*
 * registerCommands: Register commands that the user (or another extension) may want to call directly
 */
-export function registerCommands(context: vscode.ExtensionContext)
+export function registerCommands()
 {
 	/* TODO: Tree view refresh command */
 	//vscode.commands.registerCommand("vscode-tm1.refreshView", () => {setupObjectLists});
 
 	/* Tree view item save command */
-	vscode.commands.registerCommand("vscode-tm1.saveObject", () => {console.log("saved")});
+	vscode.commands.registerCommand("vscode-tm1.saveObject", (viewItem) => {
+                var document = tm1Core.getDocument(viewItem.Name);
+                tm1Core.sendTM1Object(document.type, document.name, document.docHandle.getText());
+        });
 
 	vscode.commands.registerCommand("vscode-tm1.openAddConnectionScreen", () => {connectionManager.openConnectionSettings()});
 	vscode.commands.registerCommand("vscode-tm1.refreshConnectionView", () => {connectionManager.listConnections()});
@@ -65,7 +68,7 @@ export function setupObjectLists()
 }
 
 /*
-* createTreeView: Create a TreeView with provided configs and attach an event listener
+* createTreeView: Create a TreeView with provided configs and attach an onDidChangeSelection event listener
 */
 function createTreeView(viewConfig: tm1CoreDefs.TM1ViewConfig, tm1ReqObject: tm1Req.TM1ReqObject)
 {
@@ -74,7 +77,11 @@ function createTreeView(viewConfig: tm1CoreDefs.TM1ViewConfig, tm1ReqObject: tm1
 	view.treeView.onDidChangeSelection(() => {
 		var selection = view.treeView.selection;
 		
-		tm1Core.setEditorText(viewConfig.language, selection[0].Name);
-		tm1Core.updateOpenDocuments(selection[0].Name, view.dataProvider);
+		tm1Core.getTM1Object(viewConfig.language, selection[0].Name).then(content => {
+                        tm1Core.createNewDocument(viewConfig.language, content).then(() => {
+                                tm1Core.updateOpenDocuments(viewConfig.language, selection[0].Name);
+                                tm1Core.refreshTreeView(view.dataProvider);
+                        });
+                });
 	});
 }

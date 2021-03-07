@@ -36,7 +36,7 @@ export namespace tm1Req {
 		public method: TM1APIMethod = TM1APIMethod.GET;
 
 		/* Optional constructor to assign apiCall and method type */
-		constructor(apiCall?: string, method?: TM1APIMethod)
+		constructor(apiCall?: string | undefined, method?: TM1APIMethod | undefined)
 		{
 			if (apiCall)
 				this.apiCall = apiCall;
@@ -45,9 +45,9 @@ export namespace tm1Req {
 		}
 
 		/*
-		* tm1RestCall: The main function for "GET"ing and "PATCH"ing TM1 data to the database instance
+		* execute: The main function for "GET"ing and "PATCH"ing TM1 data to the database instance
 		*/
-		public async execute(): Promise<TM1Return>
+		public async execute(dataObj?: any): Promise<TM1Return>
 		{
 			var settings = vscode.workspace.getConfiguration("vscode-tm1");
 			var encodedCreds = "";
@@ -57,6 +57,7 @@ export namespace tm1Req {
 			var hostname = settings.get("defaultConnection.Hostname");
 			var httpPortNumber = settings.get("defaultConnection.HTTPPortNumber");
 			var integratedSecurityMode = settings.get("defaultConnection.IntegratedSecurityMode")
+			
 			switch (integratedSecurityMode)	
 			{
 				case "2":
@@ -81,7 +82,8 @@ export namespace tm1Req {
 					"Authorization": encodedCreds
 				},
 				method: this.method,
-				url: encodeURI(baseURL + this.apiCall)
+				url: encodeURI(baseURL + this.apiCall),
+				data: dataObj ? dataObj : null
 			};
 			
 			return axios(config).then(response => {

@@ -9,8 +9,8 @@ GlobalVars.g_OpenDocuments = [];
 */
 export function activate(context: vscode.ExtensionContext)
 {
-	init.registerCommands(context);
 	init.initVars();
+	init.registerCommands();
 	init.setupObjectLists();
 }
 

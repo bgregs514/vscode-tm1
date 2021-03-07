@@ -64,40 +64,40 @@
 				},
 				"vscode-tm1.connectionList":{
 					"type": "array",
-                    "markdownDescription": "Server connections list",
-                    "default": [],
-					"items":{
+					"markdownDescription": "Server connections list",
+					"default": [],
+					"items": {
 						"type":"object",
 						"properties":{
 							"connectionName": {
-                                "type": "string",
-                                "description": "Connection name"
-                            },
+								"type": "string",
+								"description": "Connection name"
+							},
 							"connectionHostname": {
 								"type": "string",
 								"default": "",
 								"description": "TM1 host name"
 							},	
 							"connectionHTTPPortnumber": {
-                                "type": "number",
-                                "description": "HTTPPortNumber found in tm1s.cfg"
-                            },
+								"type": "number",
+								"description": "HTTPPortNumber found in tm1s.cfg"
+							},
 							"connectionUsername": {
-                                "type": "string",
-                                "description": "Database username"
-                            },
+								"type": "string",
+								"description": "Database username"
+							},
 							"connectionPassword": {
-                                "type": [
-                                    "string",
-                                    "null"
-                                ],
-                                "description": "Connection password"
-                            },
-                            "connectionAskForPassword": {
-                                "type": "boolean",
-                                "description": "Ask for password instead of set it in your settings",
-                                "default": false
-                            },
+								"type": [
+										"string",
+										"null"
+									],
+								"description": "Connection password"
+							},
+							"connectionAskForPassword": {
+								"type": "boolean",
+								"description": "Ask for password instead of set it in your settings",
+								"default": false
+							},
 							"connectionIntegratedSecurityMode": {
 								"type": "string",
 								"default": "1",
@@ -117,10 +117,10 @@
 								"description": "Namespace for CAM authentication"
 							}
 						}
-					}
-				}	
-		}
-	},
+					}	
+				}
+			}
+		},
 		"languages": [
 			{
 				"id": "tm1rule",
@@ -198,8 +198,7 @@
 					"icon": "media/cube.svg"
 				}
 			]
-		},
-	
+		},	
 		"views": {
 			"tm1ActivityBarContainer": [
 				{
@@ -215,15 +214,17 @@
 					"name": "Processes"
 				},
 				{
-                    "id": "tm1ViewBookmarksExplorer",
-                    "name": "Bookmarks"
-                }
+					"id": "tm1ViewBookmarksExplorer",
+					"name": "Bookmarks"
+               			}
 			]
 		},
-		"viewsWelcome":[{
-			"view": "tm1ViewConnectionExplorer",
-			"contents": "No TM1 Server connections found.\n[Add new connection](command:vscode-tm1.openAddConnectionScreen)"
-		}],
+		"viewsWelcome":[
+			{
+				"view": "tm1ViewConnectionExplorer",
+				"contents": "No TM1 Server connections found.\n[Add new connection](command:vscode-tm1.openAddConnectionScreen)"
+			}
+		],
 		"commands": [
 			{
 				"command": "vscode-tm1.refreshConnectionView",
@@ -240,30 +241,36 @@
 				"icon": "media/save.svg"
 			},
 			{
-                "command": "vscode-tm1.openAddConnectionScreen",
+                		"command": "vscode-tm1.openAddConnectionScreen",
 				"title": "Add New Connection",
-				"icon": 
-				{
+				"icon": {
 					"dark" : "media/add_dark.svg",
 					"light" : "media/add_light.svg"
 				}
-            }
+            		}
 		],
 		"menus": {
 			"view/title": [
 				{
-                    "command": "vscode-tm1.openAddConnectionScreen",
-                    "when": "view == tm1ViewConnectionExplorer",
+                    			"command": "vscode-tm1.openAddConnectionScreen",
+                    			"when": "view == tm1ViewConnectionExplorer",
 					"group":"navigation@1"
-                },
+                		},
 				{
-                    "command": "vscode-tm1.refreshConnectionView",
-                    "when": "view == tm1ViewConnectionExplorer",
+                    			"command": "vscode-tm1.refreshConnectionView",
+                    			"when": "view == tm1ViewConnectionExplorer",
 					"group":"navigation@2"
-                }
+                		}
+			],
+			"view/item/context": [
+				{
+					"command": "vscode-tm1.saveObject",
+					"when": "view == cubList && viewItem == open",
+					"group": "inline"
+				}
 			]
 		}
-		,
+	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
 		"compile": "tsc -p ./",
@@ -288,6 +295,5 @@
 	"dependencies": {
 		"axios": "^0.21.1",
 		"https": "^1.0.0"
-	}
 	}
 }
