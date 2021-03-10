@@ -9,11 +9,7 @@ import * as tm1NetDefs from "../net/netDefs";
 */
 export function updateOpenDocuments(type: string, selectionName: string)
 {
-	var docExist = getDocument(selectionName);
-	/* Rant: TypeScript and its inability to return sane null objects is infurating; this should be handled
-	as a ternary operator on the return, but of course, this front-end crap doesn't trust the developer enough
-	to operate at that level */
-	if (docExist.name != undefined) {
+	if (getDocument(selectionName)) {
 	 	return;
 	}
 
@@ -93,7 +89,7 @@ export function sendTM1Object(type: string, queryObj: string, data: string)
 /*
 * getDocument: Returns a requested document from g_OpenDocuments
 */
-export function getDocument(docName: string): tm1CoreDefs.DocumentObject
+export function getDocument(docName: string): tm1CoreDefs.DocumentObject | null
 {
 	var docs: tm1CoreDefs.DocumentObject[] = tm1Core.GlobalVars.g_OpenDocuments;
 	var docRecord = <tm1CoreDefs.DocumentObject>{};
@@ -105,7 +101,7 @@ export function getDocument(docName: string): tm1CoreDefs.DocumentObject
 		}
 	}
 
-	return docRecord;
+	return docRecord.name ? docRecord : null;
 }
 
 /*

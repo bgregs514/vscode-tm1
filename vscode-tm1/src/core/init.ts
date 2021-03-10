@@ -29,6 +29,9 @@ export function registerCommands()
 	/* Tree view item save command */
 	vscode.commands.registerCommand("vscode-tm1.saveObject", (viewItem) => {
                 var document = tm1Core.getDocument(viewItem.Name);
+		if (!document) {
+			return;
+		}
                 tm1Core.sendTM1Object(document.type, document.name, document.docHandle.getText());
         });
 
@@ -83,8 +86,7 @@ function createTreeView(viewConfig: tm1CoreDefs.TM1ViewConfig, tm1ReqObject: tm1
 		var selection = view.treeView.selection;
 		
 		tm1Core.getTM1Object(viewConfig.language, selection[0].Name).then(content => {
-			var docExist = tm1Core.getDocument(selection[0].Name);
-			if (docExist.name != undefined) {
+			if (tm1Core.getDocument(selection[0].Name)) {
 				 return;
 			}
                         tm1Core.createNewDocument(viewConfig.language, content).then(() => {
