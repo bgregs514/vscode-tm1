@@ -9,6 +9,14 @@ import * as tm1NetDefs from "../net/netDefs";
 */
 export function updateOpenDocuments(type: string, selectionName: string)
 {
+	var docExist = getDocument(selectionName);
+	/* Rant: TypeScript and its inability to return sane null objects is infurating; this should be handled
+	as a ternary operator on the return, but of course, this front-end crap doesn't trust the developer enough
+	to operate at that level */
+	if (docExist.name != undefined) {
+	 	return;
+	}
+
 	var docObj: tm1CoreDefs.DocumentObject = {
 		name: selectionName,
 		type: type,

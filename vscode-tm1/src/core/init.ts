@@ -83,6 +83,10 @@ function createTreeView(viewConfig: tm1CoreDefs.TM1ViewConfig, tm1ReqObject: tm1
 		var selection = view.treeView.selection;
 		
 		tm1Core.getTM1Object(viewConfig.language, selection[0].Name).then(content => {
+			var docExist = tm1Core.getDocument(selection[0].Name);
+			if (docExist.name != undefined) {
+				 return;
+			}
                         tm1Core.createNewDocument(viewConfig.language, content).then(() => {
                                 tm1Core.updateOpenDocuments(viewConfig.language, selection[0].Name);
                                 tm1Core.refreshTreeView(view.dataProvider);
