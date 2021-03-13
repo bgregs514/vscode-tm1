@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import * as tm1Core from "../core/classDefs";
 import * as tm1CoreDefs from "../core/classDefs";
 import * as tm1NetDefs from "../net/netDefs";
+import * as tm1Notify from "../core/notify"
 
 /*
 * updateOpenDocuments: Adjust g_OpenDocuments to account for changes, and refresh the TM1ObjectProvider
@@ -86,7 +87,9 @@ export function sendTM1Object(type: string, queryObj: string, data: string)
 	}
 
 	dataObj = JSON.stringify(dataObj);
-        req.execute(dataObj).catch(error => {
+        req.execute(dataObj).then(() => {
+		tm1Notify.notifySuccess(queryObj + " " + type + " saved successfully!")
+	}).catch(error => {
                 console.log(error);
         });
 }

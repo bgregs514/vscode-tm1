@@ -22,23 +22,27 @@
 					"description": "Connection name"
 				},
 				"vscode-tm1.defaultConnection.IntegratedSecurityMode": {
-				
 					"type": "string",
 					"default": "1",
-					"enum": ["1","2","3","4","5"],
+					"enum": [
+						"1",
+						"2",
+						"3",
+						"4",
+						"5"
+					],
 					"enumDescriptions": [
 						"Basic",
 						"Basic + Integrated",
 						"Integrated",
 						"CAM without TM1 Groups",
 						"CAM with TM1 Groups"
-					]		
+					]
 				},
-
 				"vscode-tm1.defaultConnection.Hostname": {
 					"type": "string",
 					"description": "TM1 host name"
-				},	
+				},
 				"vscode-tm1.defaultConnection.HTTPPortNumber": {
 					"type": "number",
 					"description": "HTTPPortNumber found in tm1s.cfg"
@@ -56,19 +60,18 @@
 					"description": "Ask for password instead of set it in your settings",
 					"default": false
 				},
-			
 				"vscode-tm1.defaultConnection.CAMNamespace": {
 					"type": "string",
 					"default": "",
 					"description": "Namespace for CAM authentication"
 				},
-				"vscode-tm1.connectionList":{
+				"vscode-tm1.connectionList": {
 					"type": "array",
 					"markdownDescription": "Server connections list",
 					"default": [],
 					"items": {
-						"type":"object",
-						"properties":{
+						"type": "object",
+						"properties": {
 							"connectionName": {
 								"type": "string",
 								"description": "Connection name"
@@ -77,7 +80,7 @@
 								"type": "string",
 								"default": "",
 								"description": "TM1 host name"
-							},	
+							},
 							"connectionHTTPPortnumber": {
 								"type": "number",
 								"description": "HTTPPortNumber found in tm1s.cfg"
@@ -88,9 +91,9 @@
 							},
 							"connectionPassword": {
 								"type": [
-										"string",
-										"null"
-									],
+									"string",
+									"null"
+								],
 								"description": "Connection password"
 							},
 							"connectionAskForPassword": {
@@ -101,7 +104,13 @@
 							"connectionIntegratedSecurityMode": {
 								"type": "string",
 								"default": "1",
-								"enum": ["1","2","3","4","5"],
+								"enum": [
+									"1",
+									"2",
+									"3",
+									"4",
+									"5"
+								],
 								"enumDescriptions": [
 									"Basic",
 									"Basic + Integrated",
@@ -117,7 +126,7 @@
 								"description": "Namespace for CAM authentication"
 							}
 						}
-					}	
+					}
 				}
 			}
 		},
@@ -198,7 +207,7 @@
 					"icon": "media/cube.svg"
 				}
 			]
-		},	
+		},
 		"views": {
 			"tm1ActivityBarContainer": [
 				{
@@ -216,10 +225,10 @@
 				{
 					"id": "tm1ViewBookmarksExplorer",
 					"name": "Bookmarks"
-               			}
+				}
 			]
 		},
-		"viewsWelcome":[
+		"viewsWelcome": [
 			{
 				"view": "tm1ViewConnectionExplorer",
 				"contents": "No TM1 Server connections found.\n[Add new connection](command:vscode-tm1.openAddConnectionScreen)"
@@ -230,10 +239,9 @@
 				"command": "vscode-tm1.refreshConnectionView",
 				"title": "Refresh Connection View",
 				"icon": {
-					"dark" : "media/refresh_dark.svg",
-					"light" : "media/refresh_light.svg"
+					"dark": "media/refresh_dark.svg",
+					"light": "media/refresh_light.svg"
 				}
-
 			},
 			{
 				"command": "vscode-tm1.saveObject",
@@ -241,26 +249,26 @@
 				"icon": "media/save.svg"
 			},
 			{
-                		"command": "vscode-tm1.openAddConnectionScreen",
+				"command": "vscode-tm1.openAddConnectionScreen",
 				"title": "Add New Connection",
 				"icon": {
-					"dark" : "media/add_dark.svg",
-					"light" : "media/add_light.svg"
+					"dark": "media/add_dark.svg",
+					"light": "media/add_light.svg"
 				}
-            		}
+			}
 		],
 		"menus": {
 			"view/title": [
 				{
-                    			"command": "vscode-tm1.openAddConnectionScreen",
-                    			"when": "view == tm1ViewConnectionExplorer",
-					"group":"navigation@1"
-                		},
+					"command": "vscode-tm1.openAddConnectionScreen",
+					"when": "view == tm1ViewConnectionExplorer",
+					"group": "navigation@1"
+				},
 				{
-                    			"command": "vscode-tm1.refreshConnectionView",
-                    			"when": "view == tm1ViewConnectionExplorer",
-					"group":"navigation@2"
-                		}
+					"command": "vscode-tm1.refreshConnectionView",
+					"when": "view == tm1ViewConnectionExplorer",
+					"group": "navigation@2"
+				}
 			],
 			"view/item/context": [
 				{
