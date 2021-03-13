@@ -14,6 +14,13 @@ A Visual Studio Code Extension for TM1
 ![Rule Editing](docs/ruleEdit.png)
 ![TI Editing](docs/tiEdit.png)
 
+# Installing the extension (outside of developer mode)
+You can test out the latest version of the vscode-tm1 extension in your regular VSCode editor by installing the included `.vsix` file using the following command:
+```PowerShell
+code --install-extension vscode-tm1-0.0.1.vsix
+```
+See [here](https://code.visualstudio.com/api/working-with-extensions/publishing-extension#packaging-extensions) for more details on how to install the extension.
+
 # I want to contribute, how do I start?
 Awesome, let's get you setup with the basic tools and documentation.  You can start by reading this project's [CONTRIBUTING](docs/CONTRIBUTING.md) page.
 
