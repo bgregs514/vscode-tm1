@@ -1,6 +1,9 @@
 # Contributing to vscode-tm1
 Thank you to all who have and will contribute!  This project wouldn't be possible without the support and expertise you bring.
 
+# Packaging
+Please ensure that each major commit includes an updated `.vsix` file.  For information on how to generate the extension file, see [here](https://code.visualstudio.com/api/working-with-extensions/publishing-extension#packaging-extensions).
+
 # Style Guidelines (Work in progress)
 While this project is written in TypeScript, many of the principles and recommendations found in the [Linux kernel coding style](https://www.kernel.org/doc/html/v4.10/process/coding-style.html) are applicable (as they are to most other projects as well).  This document is not written in stone - if there are changes or recommendations that you think would be beneficial, please log an issue and we'll talk about it!
 
