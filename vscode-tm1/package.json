@@ -217,7 +217,8 @@
 			"tm1ActivityBarContainer": [
 				{
 					"id": "tm1ViewConnectionExplorer",
-					"name": "TM1 Connections"
+					"name": "TM1 Connections",
+					"visibility": "collapsed"
 				},
 				{
 					"id": "cubList",
@@ -229,7 +230,8 @@
 				},
 				{
 					"id": "tm1ViewBookmarksExplorer",
-					"name": "Bookmarks"
+					"name": "Bookmarks",
+					"visibility": "collapsed"
 				}
 			]
 		},
