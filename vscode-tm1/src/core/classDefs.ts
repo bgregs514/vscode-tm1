@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import * as path from 'path';
 import * as tm1NetDefs from "../net/netDefs";
 
 /*
@@ -33,7 +34,7 @@ export class TM1ViewHelper {
 	
 	constructor(viewName: string, tm1ReqObject: tm1NetDefs.TM1ReqObject)
 	{
-		this.dataProvider = new TM1ObjectProvider(tm1ReqObject);
+		this.dataProvider = new TM1ObjectProvider(viewName, tm1ReqObject);
 		this.treeView = vscode.window.createTreeView(viewName, {
 			canSelectMany: false,
 			showCollapseAll: true,
@@ -59,8 +60,10 @@ export class TM1ObjectProvider implements vscode.TreeDataProvider<tm1NetDefs.TM1
 	readonly onDidChangeTreeData: vscode.Event<tm1NetDefs.TM1Return | null> = this._onDidChangeTreeData.event;
 	
 	private tm1ReqObject;
-	constructor(tm1ReqObject: tm1NetDefs.TM1ReqObject) {
+	private viewName;
+	constructor(viewName: string, tm1ReqObject: tm1NetDefs.TM1ReqObject) {
 		//console.log(data);
+		this.viewName = viewName;
 		this.tm1ReqObject = tm1ReqObject;
 	}
 
@@ -72,6 +75,7 @@ export class TM1ObjectProvider implements vscode.TreeDataProvider<tm1NetDefs.TM1
 
 	getTreeItem(item: any): TM1TreeItem {
 		return new TM1TreeItem(
+			this.viewName,
 			item.Name
 		);
 	}
@@ -94,11 +98,20 @@ export class TM1ObjectProvider implements vscode.TreeDataProvider<tm1NetDefs.TM1
 * TM1TreeItem: Custom TreeItem class to define contextValue and other attributes
 */
 export class TM1TreeItem extends vscode.TreeItem{
-	constructor(label: string) {
+	constructor(viewName: string, label: string) {
 		super(label);
+		this.iconPath = path.join(__dirname, '..', '..', 'media', 'dark', this.getIconPath(viewName));
 	}
 
 	contextValue = this.getOpenDocs();
+	collapsibleState = 0;
+
+	getIconPath(viewName: string): string
+	{
+		var icon = viewName == "cubList" ? "extensions.svg" : "code.svg";
+		
+		return icon;
+	}
 
 	getOpenDocs(): string
 	{
