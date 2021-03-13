@@ -1,6 +1,11 @@
 {
 	"name": "vscode-tm1",
 	"displayName": "vscode-tm1",
+	"publisher": "graybeard",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/bgregs514/vscode-tm1"
+	},
 	"description": "A Visual Studio Extension for TM1",
 	"version": "0.0.1",
 	"engines": {
