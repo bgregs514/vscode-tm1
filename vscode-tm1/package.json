@@ -265,7 +265,7 @@
 			"view/item/context": [
 				{
 					"command": "vscode-tm1.saveObject",
-					"when": "view == cubList && viewItem == open",
+					"when": "view == cubList && viewItem == open || view == procList && viewItem == open",
 					"group": "inline"
 				}
 			]

@@ -78,7 +78,12 @@ export function sendTM1Object(type: string, queryObj: string, data: string)
 		dataObj = {
 			Rules: data
 		};
-        }
+        } else {
+		req.apiCall = "Processes('" + queryObj + "')";
+		dataObj = {
+			Code: data
+		}
+	}
 
 	dataObj = JSON.stringify(dataObj);
         req.execute(dataObj).catch(error => {
