@@ -24,6 +24,7 @@ export interface TM1Return {
 }
 
 export interface TM1Config {
+	localWorkspace: string | undefined,
 	encodedCreds: string | undefined,
 	username: string | undefined,
 	password: string | undefined,

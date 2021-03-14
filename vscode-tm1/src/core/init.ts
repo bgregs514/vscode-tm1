@@ -1,5 +1,7 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
+import * as fs from 'fs';
+import * as os from 'os';
 import * as tm1Core from "../core/core"
 import * as tm1CoreDefs from "../core/classDefs";
 import * as tm1NetDefs from "../net/netDefs";
@@ -17,6 +19,9 @@ export function initVars()
         /* g_Config */
         tm1CoreDefs.GlobalVars.g_Config = <tm1NetDefs.TM1Config>{};
         tm1Net.initTM1Config();
+
+	/* g_isLoadLocalWorkspace */
+	tm1CoreDefs.GlobalVars.g_isLoadLocalWorkspace = false;
 }
 
 /*
@@ -111,4 +116,37 @@ function createTreeView(viewConfig: tm1CoreDefs.TM1ViewConfig, tm1ReqObject: tm1
                         });
                 });
 	});
+}
+
+function isLocalWorkspaceExists(localWorkspace: string): boolean
+{
+	return fs.existsSync(localWorkspace!);
+}
+
+function isLocalWorkspaceEmpty(localWorkspace: string): boolean
+{
+	return fs.readdirSync(localWorkspace!).length === 0;
+}
+
+export function initLocalWorkspace()
+{
+	var config: tm1NetDefs.TM1Config = tm1CoreDefs.GlobalVars.g_Config;
+	var localWorkspace = config.localWorkspace;
+
+	/* Assign user directory default if not Local Workspace specified */
+	if (localWorkspace == "") {
+		localWorkspace = path.join(os.homedir(), '.vscode-tm1');
+		tm1CoreDefs.GlobalVars.g_Config.localWorkspace = localWorkspace;
+	}
+	console.log("Local Workspace: " + localWorkspace);
+
+	/* Create local workspace if it doesn't exist */
+	if (!isLocalWorkspaceExists(localWorkspace!)) {
+		fs.mkdirSync(localWorkspace!);
+	}
+
+	/* Load the local workspace from TM1 if it is empty */
+	if (isLocalWorkspaceEmpty(localWorkspace!)) {
+		tm1CoreDefs.GlobalVars.g_isLoadLocalWorkspace = true;
+	}
 }

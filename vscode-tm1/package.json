@@ -22,6 +22,10 @@
 		"configuration": {
 			"title": "vscode-tm1",
 			"properties": {
+				"vscode-tm1.localWorkspace": {
+					"type": "string",
+					"description": "Local Workspace"
+				},
 				"vscode-tm1.defaultConnection.Name": {
 					"type": "string",
 					"description": "Connection name"
@@ -253,7 +257,7 @@
 			{
 				"command": "vscode-tm1.saveObject",
 				"title": "Save Object",
-				"icon": "media/save.svg"
+				"icon": "media/dark/cloud-upload.svg"
 			},
 			{
 				"command": "vscode-tm1.openAddConnectionScreen",

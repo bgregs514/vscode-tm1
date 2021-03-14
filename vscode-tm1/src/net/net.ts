@@ -7,6 +7,7 @@ export function initTM1Config()
         var settings = vscode.workspace.getConfiguration("vscode-tm1");
         var config: tm1NetDefs.TM1Config = tm1CoreDefs.GlobalVars.g_Config;
 
+        config.localWorkspace = settings.get("localWorkspace");
         config.username = settings.get("defaultConnection.Username");
         config.password = settings.get("defaultConnection.Password");
         config.CAMNamespace = settings.get("defaultConnection.CAMNamespace");

@@ -1,6 +1,8 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
+import * as fs from 'fs';
 import * as tm1NetDefs from "../net/netDefs";
+import * as tm1Core from "../core/core"
 
 /*
 * GlobalVars: Class export allows for treating members as variables instead of aliases, which
@@ -12,6 +14,7 @@ import * as tm1NetDefs from "../net/netDefs";
 export class GlobalVars {
 	public static g_OpenDocuments: DocumentObject[];
 	public static g_Config: tm1NetDefs.TM1Config;
+	public static g_isLoadLocalWorkspace: boolean;
 }
 
 /*
@@ -98,9 +101,15 @@ export class TM1ObjectProvider implements vscode.TreeDataProvider<tm1NetDefs.TM1
 * TM1TreeItem: Custom TreeItem class to define contextValue and other attributes
 */
 export class TM1TreeItem extends vscode.TreeItem{
+	private viewName;
 	constructor(viewName: string, label: string) {
 		super(label);
+		this.viewName = viewName;
 		this.iconPath = path.join(__dirname, '..', '..', 'media', 'dark', this.getIconPath(viewName));
+
+		if (GlobalVars.g_isLoadLocalWorkspace) {
+			this.saveToLocalWorkspace();
+		}
 	}
 
 	contextValue = this.getOpenDocs();
@@ -126,5 +135,46 @@ export class TM1TreeItem extends vscode.TreeItem{
 		}
 
 		return status;
+	}
+
+	saveToLocalWorkspace()
+	{
+		console.log("saving");
+		var config: tm1NetDefs.TM1Config = GlobalVars.g_Config;
+		var localWorkspace = config.localWorkspace;
+		
+		var extension = this.getFileExtension();
+		var filePath = path.join(localWorkspace!, String(this.label) + extension);
+
+		var type = "";
+		if (this.viewName == "cubList") {
+			type = "rule";
+		} else {
+			type = "process";
+		}
+		
+		tm1Core.getTM1Object(type, String(this.label)).then((content) => {
+			fs.writeFile(filePath, content, (error) => {
+				if (error) {
+					console.log(error.message);
+				}
+			});
+		});
+	}
+
+	getFileExtension(): string
+	{
+		var fileExt = "";
+		
+		if (this.viewName == "cubList") {
+			fileExt = ".rul";
+		} else {
+			fileExt = ".pro";
+			if (String(this.label)[0] == '}') {
+				fileExt = ".prox";
+			}
+		}
+
+		return fileExt;
 	}
 }
