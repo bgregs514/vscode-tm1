@@ -9,6 +9,7 @@ export function activate(context: vscode.ExtensionContext)
 	init.initVars();
 	init.registerCommands();
 	init.setupObjectLists();
+	init.openStartupPage();
 }
 
 /*

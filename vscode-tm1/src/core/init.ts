@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import * as path from 'path';
 import * as tm1Core from "../core/core"
 import * as tm1CoreDefs from "../core/classDefs";
 import * as tm1NetDefs from "../net/netDefs";
@@ -80,6 +81,14 @@ export function setupObjectLists()
 	for (var i = 0; i < apiConfigs.length; i++) {
 		createTreeView(viewConfigs[i], apiConfigs[i]);
 	}
+}
+
+export function openStartupPage()
+{
+	var startupPath = path.join(__dirname, '..', '..', 'src', 'core', 'startupPage.txt');
+	vscode.workspace.openTextDocument(vscode.Uri.file(startupPath)).then((document) => {
+		vscode.window.showTextDocument(document);
+	});
 }
 
 /*

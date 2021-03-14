@@ -36,7 +36,7 @@ export function createNewDocument(type: string, tm1Content: string): Thenable<vs
 		content: tm1Content,
 		language: type == "rule" ? "tm1rule" : "tm1process"
 	};
-
+	
 	return vscode.workspace.openTextDocument(options).then(document => {
 		return vscode.window.showTextDocument(document);
 	});
@@ -96,14 +96,30 @@ export function sendTM1Object(type: string, queryObj: string, data: string)
 
 export function runTM1Process(queryObj: string)
 {
-	var req: tm1NetDefs.TM1ReqObject = new tm1NetDefs.TM1ReqObject(undefined, tm1NetDefs.TM1APIMethod.POST);
-	req.apiCall = "Processes('" + queryObj + "')/tm1.ExecuteWithReturn";
+	vscode.window.withProgress({
+		location: vscode.ProgressLocation.Notification,
+		title: "Running " + queryObj,
+		cancellable: true
+	}, (progress, token) => {
+		token.onCancellationRequested(() => {
+			/* TODO: Implement function to cancel TM1 thread */
+			console.log("Attempting to cancel TM1 process");
+		});
 
-        req.execute().then(() => {
-		tm1Notify.notifySuccess(queryObj + " process run successfully!")
-	}).catch(error => {
-                console.log(error);
-        });
+		var req: tm1NetDefs.TM1ReqObject = new tm1NetDefs.TM1ReqObject(undefined, tm1NetDefs.TM1APIMethod.POST);
+		req.apiCall = "Processes('" + queryObj + "')/tm1.ExecuteWithReturn";
+	
+		return req.execute().then((response) => {
+			var message = queryObj + " returned with: " + response.ProcessExecuteStatusCode;
+			if (response.ProcessExecuteStatusCode == "CompletedSuccessfully") {
+				tm1Notify.notifySuccess(message);
+			} else {
+				tm1Notify.notifyError(message);
+			}
+		}).catch(error => {
+			console.log(error);
+		});
+	});
 }
 
 /*

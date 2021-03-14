@@ -19,7 +19,8 @@ export interface TM1Return {
 	value?: Array<any>,
 	Rules?: string,
 	Code?: string,
-	PrologProcedure?: string
+	PrologProcedure?: string,
+	ProcessExecuteStatusCode?: string
 }
 
 export interface TM1Config {
