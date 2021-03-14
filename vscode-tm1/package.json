@@ -262,6 +262,11 @@
 					"dark": "media/add_dark.svg",
 					"light": "media/add_light.svg"
 				}
+			},
+			{
+				"command": "vscode-tm1.runProcess",
+				"title": "Run Process",
+				"icon": "media/dark/play.svg"
 			}
 		],
 		"menus": {
@@ -281,6 +286,11 @@
 				{
 					"command": "vscode-tm1.saveObject",
 					"when": "view == cubList && viewItem == open || view == procList && viewItem == open",
+					"group": "inline"
+				},
+				{
+					"command": "vscode-tm1.runProcess",
+					"when": "view == procList",
 					"group": "inline"
 				}
 			]

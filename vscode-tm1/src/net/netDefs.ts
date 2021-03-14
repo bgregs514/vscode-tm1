@@ -8,7 +8,8 @@ import * as tm1CoreDefs from "../core/classDefs";
 */
 export enum TM1APIMethod {
 	GET = "GET",
-	PATCH = "PATCH"
+	PATCH = "PATCH",
+	POST = "POST"
 }
 
 /*

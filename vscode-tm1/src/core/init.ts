@@ -35,6 +35,13 @@ export function registerCommands()
                 tm1Core.sendTM1Object(document.type, document.name, document.docHandle.getText());
         });
 
+	/* Process commands */
+	vscode.commands.registerCommand("vscode-tm1.runProcess", (viewItem) => {
+		//console.log(viewItem);
+		tm1Core.runTM1Process(viewItem.Name);
+	});
+
+	/* Connection Manager commands */
 	vscode.commands.registerCommand("vscode-tm1.openAddConnectionScreen", () => {connectionManager.openConnectionSettings()});
 	vscode.commands.registerCommand("vscode-tm1.refreshConnectionView", () => {connectionManager.listConnections()});
 }

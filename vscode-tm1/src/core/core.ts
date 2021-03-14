@@ -94,6 +94,18 @@ export function sendTM1Object(type: string, queryObj: string, data: string)
         });
 }
 
+export function runTM1Process(queryObj: string)
+{
+	var req: tm1NetDefs.TM1ReqObject = new tm1NetDefs.TM1ReqObject(undefined, tm1NetDefs.TM1APIMethod.POST);
+	req.apiCall = "Processes('" + queryObj + "')/tm1.ExecuteWithReturn";
+
+        req.execute().then(() => {
+		tm1Notify.notifySuccess(queryObj + " process run successfully!")
+	}).catch(error => {
+                console.log(error);
+        });
+}
+
 /*
 * getDocument: Returns a requested document from g_OpenDocuments
 */
