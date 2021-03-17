@@ -1,28 +1,10 @@
 import * as vscode from 'vscode';
+import * as path from 'path';
+import * as fs from 'fs';
 import * as tm1Core from "../core/classDefs";
 import * as tm1CoreDefs from "../core/classDefs";
 import * as tm1NetDefs from "../net/netDefs";
 import * as tm1Notify from "../core/notify"
-
-/*
-* updateOpenDocuments: Adjust g_OpenDocuments to account for changes, and refresh the TM1ObjectProvider
-* to display the "Save" icon
-*/
-export function updateOpenDocuments(type: string, selectionName: string)
-{
-	if (getDocument(selectionName)) {
-	 	return;
-	}
-
-	var docObj: tm1CoreDefs.DocumentObject = {
-		name: selectionName,
-		type: type,
-		docHandle: getActiveDocument()
-	}
-
-	tm1Core.GlobalVars.g_OpenDocuments.push(docObj);
-	console.log(tm1Core.GlobalVars.g_OpenDocuments);
-}
 
 /*
 * createNewDocument: On TreeView selection change, create a new tab for the TM1 object and display it
@@ -39,6 +21,16 @@ export function createNewDocument(type: string, tm1Content: string): Thenable<vs
 	
 	return vscode.workspace.openTextDocument(options).then(document => {
 		return vscode.window.showTextDocument(document);
+	});
+}
+
+export function openNewDocument(fileName: string)
+{
+	var localWorkspace: string = path.resolve(tm1CoreDefs.GlobalVars.g_Config.localWorkspace!);
+
+	var file = path.join(localWorkspace, fileName);
+	vscode.workspace.openTextDocument(file).then(document => {
+		vscode.window.showTextDocument(document);
 	});
 }
 
@@ -69,29 +61,45 @@ export function getTM1Object(type: string, queryObj?: string): Promise<string>
 /*
 * sendTM1Object: Sends a rule or process object to the TM1 instance
 */
-export function sendTM1Object(type: string, queryObj: string, data: string)
+export function sendTM1Object(fileName: string)
 {	
         var req: tm1NetDefs.TM1ReqObject = new tm1NetDefs.TM1ReqObject(undefined, tm1NetDefs.TM1APIMethod.PATCH);
 	var dataObj = {};
-	
-        if (type == "rule") {
-                req.apiCall = "Cubes('" + queryObj + "')";
-		dataObj = {
-			Rules: data
-		};
-        } else {
-		req.apiCall = "Processes('" + queryObj + "')";
-		dataObj = {
-			Code: data
-		}
-	}
+	var type = path.parse(fileName).ext;
+	var queryObj = path.parse(fileName).name;
 
-	dataObj = JSON.stringify(dataObj);
-        req.execute(dataObj).then(() => {
-		tm1Notify.notifySuccess(queryObj + " " + type + " saved successfully!")
-	}).catch(error => {
-                console.log(error);
-        });
+	getFileData(fileName).then((data) => {
+		if (Object.values(tm1CoreDefs.TM1RuleExt).some((v) => v === type)) {
+			req.apiCall = "Cubes('" + queryObj + "')";
+			dataObj = {
+				Rules: data
+			};
+		} else {
+			req.apiCall = "Processes('" + queryObj + "')";
+			dataObj = {
+				Code: data
+			}
+		}
+	
+		dataObj = JSON.stringify(dataObj);
+		req.execute(dataObj).then(() => {
+			tm1Notify.notifySuccess(queryObj + " " + type + " saved successfully!")
+		}).catch(error => {
+		        console.log(error);
+		});
+	});
+}
+
+function getFileData(fileName: string): Promise<any>
+{
+	var localWorkspace: string = path.resolve(tm1CoreDefs.GlobalVars.g_Config.localWorkspace!);
+	var file = path.join(localWorkspace, fileName);
+	console.log(file);
+
+	return new Promise<any>((resolve, reject) => {
+		return fs.readFile(file, "utf-8", (error, data) =>
+			error ? reject(error) : resolve(data));
+	});
 }
 
 export function runTM1Process(queryObj: string)
@@ -120,37 +128,6 @@ export function runTM1Process(queryObj: string)
 			console.log(error);
 		});
 	});
-}
-
-/*
-* getDocument: Returns a requested document from g_OpenDocuments
-*/
-export function getDocument(docName: string): tm1CoreDefs.DocumentObject | null
-{
-	var docs: tm1CoreDefs.DocumentObject[] = tm1Core.GlobalVars.g_OpenDocuments;
-	var docRecord = <tm1CoreDefs.DocumentObject>{};
-
-	for (var i = 0; i < docs.length; i++) {
-		if (docs[i].name == docName) {
-			docRecord = docs[i];
-			break;
-		}
-	}
-
-	return docRecord.name ? docRecord : null;
-}
-
-/*
-* getActiveDocument: Returns a TextDocument handle from the active editor
-*/
-function getActiveDocument(): vscode.TextDocument
-{
-	var editor = vscode.window.activeTextEditor;
-
-	if (!editor) {
-		console.log("not ready yet");
-	}
-	return vscode.window.activeTextEditor?.document!;
 }
 
 /*

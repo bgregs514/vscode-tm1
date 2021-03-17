@@ -8,6 +8,7 @@ export function initTM1Config()
         var config: tm1NetDefs.TM1Config = tm1CoreDefs.GlobalVars.g_Config;
 
         config.localWorkspace = settings.get("localWorkspace");
+        config.disableStartupPage = settings.get("disableStartupPage");
         config.username = settings.get("defaultConnection.Username");
         config.password = settings.get("defaultConnection.Password");
         config.CAMNamespace = settings.get("defaultConnection.CAMNamespace");
