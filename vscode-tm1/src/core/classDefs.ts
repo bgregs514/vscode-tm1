@@ -25,6 +25,43 @@ export enum TM1ProcExt {
 }
 
 /*
+* TM1File: Helper class that handles breaking a given file name into useful attributes
+*/
+export class TM1File {
+	public readonly fullName: string;
+	public readonly name: string;
+	public readonly ext: string;
+	public readonly type: string;
+	public readonly apiPrefix: string;
+	public readonly apiPostAttr: string;
+
+	constructor(fileName: string)
+	{
+		this.fullName = fileName;
+		this.name = path.parse(fileName).name;
+		this.ext = path.parse(fileName).ext;
+		this.type = this.getType();
+		this.apiPrefix = this.getAPIPrefix();
+		this.apiPostAttr = this.getAPIPostAttr();
+	}
+
+	private getType(): string
+	{
+		return Object.values(TM1RuleExt).some((v) => v === this.ext) ? "rule" : "process";
+	}
+
+	private getAPIPrefix(): string
+	{
+		return this.type == "rule" ? "Cubes" : "Processes";
+	}
+
+	private getAPIPostAttr(): string
+	{
+		return this.type == "rule" ? "Rules" : "Code";
+	}
+}
+
+/*
 * TreeViewHelper: Helper class to easily access treeView and dataProvider handles
 */
 export class TreeViewHelper {

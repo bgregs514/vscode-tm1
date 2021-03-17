@@ -16,6 +16,7 @@ export enum TM1APIMethod {
 * TM1Return: Supports the return types for TM1 rules and TIs
 */
 export interface TM1Return {
+	[key: string]: any,
 	value?: Array<any>,
 	Rules?: string,
 	Code?: string,

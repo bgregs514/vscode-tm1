@@ -56,7 +56,7 @@ export function registerCommands()
 	/* Process commands */
 	vscode.commands.registerCommand("vscode-tm1.runProcess", (viewItem) => {
 		//console.log(viewItem);
-		tm1Core.runTM1Process(path.parse(viewItem).name);
+		tm1Core.runTM1Process(viewItem);
 	});
 
 	/* Connection Manager commands */
@@ -161,8 +161,9 @@ function createLocalWorkspaceFiles(type: string, tm1ReqObject: tm1NetDefs.TM1Req
 				
 				var extension = getFileExtension(type, element.Name);
 				var filePath = path.join(localWorkspace!, element.Name + extension);
+				var fileString = element.Name + extension;
 				
-				return tm1Core.getTM1Object(type, element.Name).then((content) => {
+				return tm1Core.getTM1Object(fileString).then((content) => {
 					return fs.writeFile(filePath, content, (error) => {
 						if (error) {
 							console.log(error.message);

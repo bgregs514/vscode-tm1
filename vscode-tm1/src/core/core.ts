@@ -37,64 +37,48 @@ export function openNewDocument(fileName: string)
 /*
 * getTM1Object: Assemble the apiCall, retrieve data from the TM1 instance, and create a new document
 */
-export function getTM1Object(type: string, queryObj?: string): Promise<string>
+export function getTM1Object(fileString: string): Promise<string>
 {
+	var fileName: tm1CoreDefs.TM1File = new tm1CoreDefs.TM1File(fileString);
 	var req: tm1NetDefs.TM1ReqObject = new tm1NetDefs.TM1ReqObject();
 
-	if (type == "rule") {
-		req.apiCall = "Cubes('" + queryObj + "')?$select=Rules";
-	} else {
-		req.apiCall = "Processes('" + queryObj + "')?$select=Code";
-	}
+	req.apiCall = fileName.apiPrefix + "('" + fileName.name + "')?$select=" + fileName.apiPostAttr;
 
 	return req.execute().then(response => {
-		var content;
-		if (type == "rule") {
-			content = response.Rules!;
-		} else {
-			content = response.Code!;
-		}
-		return content;
+		return response[fileName.apiPostAttr];
+	}).catch((error) => {
+		console.log(error);
 	});
 }
 
 /*
 * sendTM1Object: Sends a rule or process object to the TM1 instance
 */
-export function sendTM1Object(fileName: string)
+export function sendTM1Object(fileString: string)
 {	
+	var fileName: tm1CoreDefs.TM1File = new tm1CoreDefs.TM1File(fileString);
         var req: tm1NetDefs.TM1ReqObject = new tm1NetDefs.TM1ReqObject(undefined, tm1NetDefs.TM1APIMethod.PATCH);
-	var dataObj = {};
-	var type = path.parse(fileName).ext;
-	var queryObj = path.parse(fileName).name;
 
-	getFileData(fileName).then((data) => {
-		if (Object.values(tm1CoreDefs.TM1RuleExt).some((v) => v === type)) {
-			req.apiCall = "Cubes('" + queryObj + "')";
-			dataObj = {
-				Rules: data
-			};
-		} else {
-			req.apiCall = "Processes('" + queryObj + "')";
-			dataObj = {
-				Code: data
-			}
-		}
-	
-		dataObj = JSON.stringify(dataObj);
-		req.execute(dataObj).then(() => {
-			tm1Notify.notifySuccess(queryObj + " " + type + " saved successfully!")
+	getFileData(fileName.fullName).then((data) => {
+		var dataObj: Record<string,any> = {};
+		dataObj[fileName.apiPostAttr] = data;
+		req.apiCall = fileName.apiPrefix + "('" + fileName.name + "')";
+		
+		var jsonObj = JSON.stringify(dataObj);
+		req.execute(jsonObj).then(() => {
+			tm1Notify.notifySuccess(fileName.name + " " + fileName.type + " saved successfully!");
 		}).catch(error => {
 		        console.log(error);
 		});
+	}).catch((error) => {
+		console.log(error);
 	});
 }
 
-function getFileData(fileName: string): Promise<any>
+function getFileData(fileString: string): Promise<any>
 {
 	var localWorkspace: string = path.resolve(tm1CoreDefs.GlobalVars.g_Config.localWorkspace!);
-	var file = path.join(localWorkspace, fileName);
-	console.log(file);
+	var file = path.join(localWorkspace, fileString);
 
 	return new Promise<any>((resolve, reject) => {
 		return fs.readFile(file, "utf-8", (error, data) =>
@@ -102,11 +86,13 @@ function getFileData(fileName: string): Promise<any>
 	});
 }
 
-export function runTM1Process(queryObj: string)
+export function runTM1Process(fileString: string)
 {
+	var fileName: tm1CoreDefs.TM1File = new tm1CoreDefs.TM1File(fileString);
+
 	vscode.window.withProgress({
 		location: vscode.ProgressLocation.Notification,
-		title: "Running " + queryObj,
+		title: "Running " + fileName.name,
 		cancellable: true
 	}, (progress, token) => {
 		token.onCancellationRequested(() => {
@@ -115,10 +101,10 @@ export function runTM1Process(queryObj: string)
 		});
 
 		var req: tm1NetDefs.TM1ReqObject = new tm1NetDefs.TM1ReqObject(undefined, tm1NetDefs.TM1APIMethod.POST);
-		req.apiCall = "Processes('" + queryObj + "')/tm1.ExecuteWithReturn";
+		req.apiCall = fileName.apiPrefix + "('" + fileName.name + "')/tm1.ExecuteWithReturn";
 	
 		return req.execute().then((response) => {
-			var message = queryObj + " returned with: " + response.ProcessExecuteStatusCode;
+			var message = fileName.name + " returned with: " + response.ProcessExecuteStatusCode;
 			if (response.ProcessExecuteStatusCode == "CompletedSuccessfully") {
 				tm1Notify.notifySuccess(message);
 			} else {
