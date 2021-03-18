@@ -8,10 +8,21 @@ import * as tm1NetDefs from "../net/netDefs";
 import * as tm1Net from "../net/net";
 import * as connectionManager from "./../connectionManager";
 
+export function initExt()
+{
+	initVars();
+	openStartupPage();
+	registerCommands();
+	initLocalWorkspace();
+	loadObjectLists().then(() => {
+		populateTreeViews();
+	});
+}
+
 /*
 * initVars: Initialize global variables and other misc. things that don't belong in registerCommands
 */
-export function initVars()
+function initVars()
 {
         /* g_Config */
         tm1CoreDefs.GlobalVars.g_Config = <tm1NetDefs.TM1Config>{};
@@ -24,7 +35,7 @@ export function initVars()
 /*
 * openStartupPage: Open the startup page; can be disabled in the settings
 */
-export function openStartupPage()
+function openStartupPage()
 {
 	var config: tm1NetDefs.TM1Config = tm1CoreDefs.GlobalVars.g_Config;
 	var disableStartupPage = config.disableStartupPage;
@@ -42,33 +53,50 @@ export function openStartupPage()
 /*
 * registerCommands: Register commands that the user (or another extension) may want to call directly
 */
-export function registerCommands()
+function registerCommands()
 {
-	/* TODO: Tree view refresh command */
-	//vscode.commands.registerCommand("vscode-tm1.refreshView", () => {setupObjectLists});
+	vscode.commands.getCommands().then((commands) => {
+		/* Settings refresh command */
+		if (!commands.includes("vscode-tm1.refreshSettings")) {
+			vscode.commands.registerCommand("vscode-tm1.refreshSettings", () => {initExt();});
+		}
 
-	/* Tree view item save command */
-	vscode.commands.registerCommand("vscode-tm1.saveObject", (viewItem) => {
-                //console.log(viewItem)
-                tm1Core.sendTM1Object(viewItem);
-        });
+		/* Tree view item save command */
+		if (!commands.includes("vscode-tm1.saveObject")) {
+			vscode.commands.registerCommand("vscode-tm1.saveObject", (viewItem) => {
+				//console.log(viewItem)
+				tm1Core.sendTM1Object(viewItem);
+			});
+		}
 
-	/* Process commands */
-	vscode.commands.registerCommand("vscode-tm1.runProcess", (viewItem) => {
-		//console.log(viewItem);
-		tm1Core.runTM1Process(viewItem);
+		/* Process commands */
+		if (!commands.includes("vscode-tm1.runProcess")) {
+			vscode.commands.registerCommand("vscode-tm1.runProcess", (viewItem) => {
+				//console.log(viewItem);
+				/* Handle a run from the editor/title/run menu */
+				if (typeof viewItem != "string") {
+					viewItem = path.parse(viewItem["path"]).base;
+				}
+				tm1Core.runTM1Process(viewItem);
+			});
+		}
+
+		/* Connection Manager commands */
+		if (!commands.includes("vscode-tm1.openAddConnectionScreen")) {
+			vscode.commands.registerCommand("vscode-tm1.openAddConnectionScreen", () => {connectionManager.openConnectionSettings()});
+		}
+
+		if (!commands.includes("vscode-tm1.refreshConnectionView")) {
+			vscode.commands.registerCommand("vscode-tm1.refreshConnectionView", () => {connectionManager.listConnections()});
+		}
 	});
-
-	/* Connection Manager commands */
-	vscode.commands.registerCommand("vscode-tm1.openAddConnectionScreen", () => {connectionManager.openConnectionSettings()});
-	vscode.commands.registerCommand("vscode-tm1.refreshConnectionView", () => {connectionManager.listConnections()});
 }
 
 /*
 * initLocalWorkspace: Checks that a local workspace exists and creates it if it doesn't; will also set the
 * global flag to load the workspace if the directory exists, but is empty
 */
-export function initLocalWorkspace()
+function initLocalWorkspace()
 {
 	var config: tm1NetDefs.TM1Config = tm1CoreDefs.GlobalVars.g_Config;
 	var localWorkspace = config.localWorkspace;
@@ -105,7 +133,7 @@ function isLocalWorkspaceEmpty(localWorkspace: string): boolean
 * loadObjectLists: Creates the api calls for rule and process objects and passes the configuration to
 * createLocalWorkspaceFiles; this will only trigger if the local workspace is empty
 */
-export async function loadObjectLists(): Promise<any>
+async function loadObjectLists(): Promise<any>
 {
 	var isLoadLocalWorkspace: boolean = tm1CoreDefs.GlobalVars.g_isLoadLocalWorkspace;
 
@@ -198,7 +226,7 @@ function getFileExtension(type: string, fileName: string): string
 * populateTreeView: Populates the TreeViews with references to the local workspace files; this should only
 * be called after we are sure all files are done saving (if the files are being initialized)
 */
-export function populateTreeViews()
+function populateTreeViews()
 {
 	var treeViews: {viewName: string, fileExt: string}[] = [
 		{viewName: "cubList", fileExt: ".rul"},

@@ -6,13 +6,7 @@ import * as init from "./core/init"
 */
 export function activate(context: vscode.ExtensionContext)
 {
-	init.initVars();
-	init.openStartupPage();
-	init.registerCommands();
-	init.initLocalWorkspace();
-	init.loadObjectLists().then(() => {
-		init.populateTreeViews();
-	});
+	init.initExt();
 }
 
 /*

@@ -286,9 +286,24 @@
 				"command": "vscode-tm1.runProcess",
 				"title": "Run Process",
 				"icon": "media/dark/play.svg"
+			},
+			{
+				"command": "vscode-tm1.refreshSettings",
+				"title": "Refresh Settings",
+				"icon": {
+					"dark": "media/refresh_dark.svg",
+					"light": "media/refresh_light.svg"
+				}
 			}
 		],
 		"menus": {
+			"editor/title/run": [
+				{
+					"command": "vscode-tm1.runProcess",
+					"group": "navigation",
+					"when": "resourceLangId == tm1process"
+				}
+			],
 			"view/title": [
 				{
 					"command": "vscode-tm1.openAddConnectionScreen",
@@ -296,7 +311,7 @@
 					"group": "navigation@1"
 				},
 				{
-					"command": "vscode-tm1.refreshConnectionView",
+					"command": "vscode-tm1.refreshSettings",
 					"when": "view == tm1ViewConnectionExplorer",
 					"group": "navigation@2"
 				}
