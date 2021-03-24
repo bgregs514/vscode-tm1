@@ -13,6 +13,32 @@ export enum TM1APIMethod {
 }
 
 /*
+* TM1APICalls: Encapsulates the raw text strings of rest api calls
+*/
+export enum TM1APICalls {
+	default = "?$select=",
+	getParams = "?$select=Parameters"
+}
+
+/*
+* TM1ProcessParameter: The parameter attributes when retrieved through a GET call
+*/
+export interface TM1ProcessParameter {
+	Name: string,
+	Prompt: string,
+	Type: string,
+	Value: number | string
+}
+
+/*
+* TM1RunProcessParameter: The parameter format required to POST the data while running a TI
+*/
+export interface TM1RunProcessParameter {
+	Name: string,
+	Value: number | string,
+}
+
+/*
 * TM1Return: Supports the return types for TM1 rules and TIs
 */
 export interface TM1Return {
@@ -21,7 +47,8 @@ export interface TM1Return {
 	Rules?: string,
 	Code?: string,
 	PrologProcedure?: string,
-	ProcessExecuteStatusCode?: string
+	ProcessExecuteStatusCode?: string,
+	Parameters?: Array<TM1ProcessParameter>
 }
 
 export interface TM1Config {

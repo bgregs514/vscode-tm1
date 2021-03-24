@@ -37,15 +37,24 @@ export function openNewDocument(fileName: string)
 /*
 * getTM1Object: Assemble the apiCall, retrieve data from the TM1 instance, and create a new document
 */
-export function getTM1Object(fileString: string): Promise<string>
+export function getTM1Object(fileString: string): Promise<string>;
+export function getTM1Object(fileString: string, apiParam?: tm1NetDefs.TM1APICalls, retType?: string): Promise<tm1NetDefs.TM1Return>
+export function getTM1Object(string: string, arg0?: tm1NetDefs.TM1APICalls, arg1?: string)
 {
-	var fileName: tm1CoreDefs.TM1File = new tm1CoreDefs.TM1File(fileString);
+	var fileName: tm1CoreDefs.TM1File = new tm1CoreDefs.TM1File(string);
 	var req: tm1NetDefs.TM1ReqObject = new tm1NetDefs.TM1ReqObject();
+	var index: string = "";
 
-	req.apiCall = fileName.apiPrefix + "('" + fileName.name + "')?$select=" + fileName.apiPostAttr;
+	if (!arg0) {
+		req.apiCall = fileName.apiPrefix + "('" + fileName.name + "')" + tm1NetDefs.TM1APICalls.default + fileName.apiPostAttr;
+		index = fileName.apiPostAttr;
+	} else {
+		req.apiCall = fileName.apiPrefix + "('" + fileName.name + "')" + arg0;
+		index = arg1!;
+	}
 
 	return req.execute().then(response => {
-		return response[fileName.apiPostAttr];
+		return response[index];
 	}).catch((error) => {
 		console.log(error);
 	});
@@ -86,9 +95,14 @@ function getFileData(fileString: string): Promise<any>
 	});
 }
 
-export function runTM1Process(fileString: string)
+/*
+* runTM1Process: Runs a given TI process with user provided parameter values
+*/
+export async function runTM1Process(fileString: string)
 {
 	var fileName: tm1CoreDefs.TM1File = new tm1CoreDefs.TM1File(fileString);
+	var params: tm1NetDefs.TM1RunProcessParameter[] = await getTM1Params(fileString);
+	console.log(params);
 
 	vscode.window.withProgress({
 		location: vscode.ProgressLocation.Notification,
@@ -102,8 +116,14 @@ export function runTM1Process(fileString: string)
 
 		var req: tm1NetDefs.TM1ReqObject = new tm1NetDefs.TM1ReqObject(undefined, tm1NetDefs.TM1APIMethod.POST);
 		req.apiCall = fileName.apiPrefix + "('" + fileName.name + "')/tm1.ExecuteWithReturn";
+
+		var dataObj = {
+			"Parameters": params
+		};
+		var data = JSON.stringify(dataObj);
+		console.log(data);
 	
-		return req.execute().then((response) => {
+		return req.execute(data).then((response) => {
 			var message = fileName.name + " returned with: " + response.ProcessExecuteStatusCode;
 			if (response.ProcessExecuteStatusCode == "CompletedSuccessfully") {
 				tm1Notify.notifySuccess(message);
@@ -114,6 +134,35 @@ export function runTM1Process(fileString: string)
 			console.log(error);
 		});
 	});
+}
+
+/*
+* getTM1Params: Gets the user input for parameters for a given TI process; needs to return in Name:Value format
+*/
+async function getTM1Params(fileString: string): Promise<tm1NetDefs.TM1RunProcessParameter[]>
+{
+	var data: tm1NetDefs.TM1RunProcessParameter[] = [];
+
+	var response = await getTM1Object(fileString, tm1NetDefs.TM1APICalls.getParams, "Parameters");
+	console.log(response);
+	for (var i = 0; i < response.length; i++) {
+		var element: tm1NetDefs.TM1ProcessParameter = response[i];
+		console.log(element.Name);
+		if (typeof(element.Value) == "number") {
+			element.Value = element.Value.toString();
+		}
+		var param = await tm1Notify.notifyInput(element);
+		if (param) {
+			data.push(
+				{
+					Name: element.Name,
+					Value: param
+				}
+			);
+		}
+	}
+
+	return new Promise((resolve, reject) => {resolve(data)});
 }
 
 /*
