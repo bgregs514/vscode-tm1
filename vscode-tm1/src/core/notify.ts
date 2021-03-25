@@ -11,7 +11,7 @@ export function notifyError(message: string)
         vscode.window.showErrorMessage(message);
 }
 
-export function notifyInput(param: tm1NetDefs.TM1ProcessParameter): Thenable<string | undefined>
+export function notifyParamInput(param: tm1NetDefs.TM1ProcessParameter): Thenable<string | undefined>
 {
         var tempValue: string = param.Value.toString();
 
@@ -27,6 +27,17 @@ export function notifyInput(param: tm1NetDefs.TM1ProcessParameter): Thenable<str
                 }
                 
         };
+
+        return vscode.window.showInputBox(options);
+}
+
+export function notifyNewProcInput(): Thenable<string | undefined>
+{
+        var options: vscode.InputBoxOptions = {
+                prompt: "Input New Process Name",
+                value: "",
+                placeHolder: "New TI Process"
+        }
 
         return vscode.window.showInputBox(options);
 }

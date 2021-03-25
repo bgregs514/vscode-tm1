@@ -11,7 +11,7 @@ import * as tm1NetDefs from "../net/netDefs";
 */
 export class GlobalVars {
 	public static g_Config: tm1NetDefs.TM1Config;
-	public static g_isLoadLocalWorkspace: boolean;
+	public static g_isLoadLocalWorkspace: boolean = false;
 }
 
 export enum TM1RuleExt {
@@ -137,7 +137,7 @@ export class TM1TreeItem extends vscode.TreeItem {
 
 	getIconPath(fileExt: string): string
 	{
-		var icon = fileExt.toLowerCase().includes(".rul") ? "extensions.svg" : "code.svg";
+		var icon = fileExt.toLowerCase().includes(".rul") ? "symbol-method.svg" : "code.svg";
 		
 		return icon;
 	}

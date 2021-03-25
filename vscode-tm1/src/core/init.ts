@@ -27,9 +27,6 @@ function initVars()
         /* g_Config */
         tm1CoreDefs.GlobalVars.g_Config = <tm1NetDefs.TM1Config>{};
         tm1Net.initTM1Config();
-
-	/* g_isLoadLocalWorkspace */
-	tm1CoreDefs.GlobalVars.g_isLoadLocalWorkspace = false;
 }
 
 /*
@@ -61,11 +58,17 @@ function registerCommands()
 			vscode.commands.registerCommand("vscode-tm1.refreshSettings", () => {initExt();});
 		}
 
-		/* Tree view item save command */
+		/* Tree view commands */
 		if (!commands.includes("vscode-tm1.saveObject")) {
 			vscode.commands.registerCommand("vscode-tm1.saveObject", (viewItem) => {
 				//console.log(viewItem)
 				tm1Core.sendTM1Object(viewItem);
+			});
+		}
+
+		if (!commands.includes("vscode-tm1.deleteObject")) {
+			vscode.commands.registerCommand("vscode-tm1.deleteObject", (viewItem) => {
+				tm1Core.deleteTM1Object(viewItem);
 			});
 		}
 
@@ -79,6 +82,12 @@ function registerCommands()
 				}
 				tm1Core.runTM1Process(viewItem);
 			});
+		}
+
+		if (!commands.includes("vscode-tm1.createProcess")) {
+			vscode.commands.registerCommand("vscode-tm1.createProcess", () => {
+				tm1Core.createTM1Process();
+			})
 		}
 
 		/* Connection Manager commands */
@@ -192,16 +201,22 @@ function createLocalWorkspaceFiles(type: string, tm1ReqObject: tm1NetDefs.TM1Req
 				var fileString = element.Name + extension;
 				
 				return tm1Core.getTM1Object(fileString).then((content) => {
-					return fs.writeFile(filePath, content, (error) => {
-						if (error) {
-							console.log(error.message);
-							reject(error.message);
-						}
-						console.log("writing");
-						if (i === (response.value?.length! - 1)) {
-							resolve(content);
-						}
-					});
+					if (!fs.existsSync(filePath)) {
+						console.log("doesn't exist " + filePath);
+						return fs.writeFile(filePath, content, (error) => {
+							if (error) {
+								console.log(error.message);
+								reject(error.message);
+							}
+							console.log("writing");
+							if (i === (response.value?.length! - 1)) {
+								resolve(content);
+							}
+						});
+					} else {
+						console.log("already exists " + filePath);
+						return resolve(true);
+					}
 				});
 			});
 		});

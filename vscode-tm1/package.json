@@ -288,6 +288,15 @@
 				"icon": "media/dark/play.svg"
 			},
 			{
+				"command": "vscode-tm1.createProcess",
+				"title": "Create Process",
+				"icon": "media/dark/add.svg"
+			},
+			{
+				"command": "vscode-tm1.deleteObject",
+				"title": "Delete Object"
+			},
+			{
 				"command": "vscode-tm1.refreshSettings",
 				"title": "Refresh Settings",
 				"icon": {
@@ -314,6 +323,11 @@
 					"command": "vscode-tm1.refreshSettings",
 					"when": "view == tm1ViewConnectionExplorer",
 					"group": "navigation@2"
+				},
+				{
+					"command": "vscode-tm1.createProcess",
+					"when": "view == procList",
+					"group": "navigation"
 				}
 			],
 			"view/item/context": [
@@ -325,6 +339,10 @@
 					"command": "vscode-tm1.runProcess",
 					"when": "view == procList || view == proxList",
 					"group": "inline"
+				},
+				{
+					"command": "vscode-tm1.deleteObject",
+					"when": "view == procList || view == proxList || view == cubList || view == rulxlist"
 				}
 			]
 		}

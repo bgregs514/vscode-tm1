@@ -4,7 +4,8 @@ import * as fs from 'fs';
 import * as tm1Core from "../core/classDefs";
 import * as tm1CoreDefs from "../core/classDefs";
 import * as tm1NetDefs from "../net/netDefs";
-import * as tm1Notify from "../core/notify"
+import * as tm1Notify from "../core/notify";
+import * as init from "../core/init";
 
 /*
 * createNewDocument: On TreeView selection change, create a new tab for the TM1 object and display it
@@ -24,11 +25,10 @@ export function createNewDocument(type: string, tm1Content: string): Thenable<vs
 	});
 }
 
-export function openNewDocument(fileName: string)
+export function openNewDocument(fileString: string)
 {
-	var localWorkspace: string = path.resolve(tm1CoreDefs.GlobalVars.g_Config.localWorkspace!);
+	var file = getFilePath(fileString);
 
-	var file = path.join(localWorkspace, fileName);
 	vscode.workspace.openTextDocument(file).then(document => {
 		vscode.window.showTextDocument(document);
 	});
@@ -67,8 +67,9 @@ export function sendTM1Object(fileString: string)
 {	
 	var fileName: tm1CoreDefs.TM1File = new tm1CoreDefs.TM1File(fileString);
         var req: tm1NetDefs.TM1ReqObject = new tm1NetDefs.TM1ReqObject(undefined, tm1NetDefs.TM1APIMethod.PATCH);
+	var file = getFilePath(fileString);
 
-	getFileData(fileName.fullName).then((data) => {
+	getFileData(file).then((data) => {
 		var dataObj: Record<string,any> = {};
 		dataObj[fileName.apiPostAttr] = data;
 		req.apiCall = fileName.apiPrefix + "('" + fileName.name + "')";
@@ -84,15 +85,31 @@ export function sendTM1Object(fileString: string)
 	});
 }
 
-function getFileData(fileString: string): Promise<any>
+function getFileData(file: string): Promise<any>
 {
-	var localWorkspace: string = path.resolve(tm1CoreDefs.GlobalVars.g_Config.localWorkspace!);
-	var file = path.join(localWorkspace, fileString);
-
 	return new Promise<any>((resolve, reject) => {
 		return fs.readFile(file, "utf-8", (error, data) =>
 			error ? reject(error) : resolve(data));
 	});
+}
+
+function createTM1Object(dataObj: any, type: tm1NetDefs.TM1CreateObject): Promise<any>
+{
+	var req: tm1NetDefs.TM1ReqObject = new tm1NetDefs.TM1ReqObject(undefined, tm1NetDefs.TM1APIMethod.POST);
+
+	req.apiCall = type;
+
+	return req.execute(dataObj).then(() => {
+		tm1Notify.notifySuccess(dataObj.Name + " created successfully!");
+	}).catch(error => {
+		console.log(error);
+	});
+}
+
+function getFilePath(fileString: string): string
+{
+	var localWorkspace: string = path.resolve(tm1CoreDefs.GlobalVars.g_Config.localWorkspace!);
+	return path.join(localWorkspace, fileString);
 }
 
 /*
@@ -151,7 +168,7 @@ async function getTM1Params(fileString: string): Promise<tm1NetDefs.TM1RunProces
 		if (typeof(element.Value) == "number") {
 			element.Value = element.Value.toString();
 		}
-		var param = await tm1Notify.notifyInput(element);
+		var param = await tm1Notify.notifyParamInput(element);
 		if (param) {
 			data.push(
 				{
@@ -168,7 +185,42 @@ async function getTM1Params(fileString: string): Promise<tm1NetDefs.TM1RunProces
 /*
 * refreshTreeView: Refreshes a given ObjectProviders data
 */
-export function refreshTreeView(objectProvider: tm1Core.TM1ObjectProvider)
+export function refreshViews()
 {
-	objectProvider.refresh();
+	tm1CoreDefs.GlobalVars.g_isLoadLocalWorkspace = true;
+	init.initExt();
+}
+
+export async function createTM1Process()
+{
+	var procName = await tm1Notify.notifyNewProcInput();
+	if (!procName) {
+		return;
+	}
+
+	var procTemplatePath = path.join(__dirname, '..', '..', 'resources', "proc_template.json");
+	getFileData(procTemplatePath).then(response => {
+		var dataObj = JSON.parse(response);
+		dataObj.Name = procName;
+		createTM1Object(dataObj, tm1NetDefs.TM1CreateObject.process).then(() => {
+			refreshViews();
+		});
+	});
+}
+
+export function deleteTM1Object(fileString: string)
+{
+	var fileName: tm1CoreDefs.TM1File = new tm1CoreDefs.TM1File(fileString);
+        var req: tm1NetDefs.TM1ReqObject = new tm1NetDefs.TM1ReqObject(undefined, tm1NetDefs.TM1APIMethod.DELETE);
+	var file = getFilePath(fileString);
+
+	fs.unlinkSync(file);
+
+	req.apiCall = fileName.apiPrefix + "('" + fileName.name + "')";
+	req.execute().then(() => {
+		refreshViews();
+		tm1Notify.notifySuccess(fileName.name + " " + fileName.type + " deleted successfully!");
+	}).catch(error => {
+		console.log(error);
+	});
 }

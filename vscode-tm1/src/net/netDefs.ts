@@ -9,7 +9,8 @@ import * as tm1CoreDefs from "../core/classDefs";
 export enum TM1APIMethod {
 	GET = "GET",
 	PATCH = "PATCH",
-	POST = "POST"
+	POST = "POST",
+	DELETE = "DELETE"
 }
 
 /*
@@ -18,6 +19,10 @@ export enum TM1APIMethod {
 export enum TM1APICalls {
 	default = "?$select=",
 	getParams = "?$select=Parameters"
+}
+
+export enum TM1CreateObject {
+	process = "Processes"
 }
 
 /*
