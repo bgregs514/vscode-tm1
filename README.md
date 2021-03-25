@@ -11,8 +11,8 @@ A Visual Studio Code Extension for TM1
 - Code snippets for rules and TIs
 - Intellisense for rules and TIs
 
-![Rule Editing](docs/ruleEdit.png)
-![TI Editing](docs/tiEdit.png)
+![Code Editing](docs/tiEdit.gif)
+![TI Processing](docs/tiRun.gif)
 
 # Installing the extension (outside of developer mode)
 You can test out the latest version of the vscode-tm1 extension in your regular VSCode editor by installing the included `.vsix` file using the following command:
