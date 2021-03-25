@@ -7,11 +7,10 @@ import * as tm1CoreDefs from "../core/classDefs";
 import * as tm1NetDefs from "../net/netDefs";
 import * as tm1Net from "../net/net";
 import * as connectionManager from "./../connectionManager";
+import * as startupPage from "../core/startupPage"
 
 export function initExt()
 {
-	initVars();
-	openStartupPage();
 	registerCommands();
 	initLocalWorkspace();
 	loadObjectLists().then(() => {
@@ -22,29 +21,30 @@ export function initExt()
 /*
 * initVars: Initialize global variables and other misc. things that don't belong in registerCommands
 */
-function initVars()
+export function initVars(context: vscode.ExtensionContext)
 {
         /* g_Config */
         tm1CoreDefs.GlobalVars.g_Config = <tm1NetDefs.TM1Config>{};
-        tm1Net.initTM1Config();
+        tm1Net.initTM1Config(context);
 }
 
 /*
 * openStartupPage: Open the startup page; can be disabled in the settings
 */
-function openStartupPage()
+export function openStartupPage()
 {
 	var config: tm1NetDefs.TM1Config = tm1CoreDefs.GlobalVars.g_Config;
 	var disableStartupPage = config.disableStartupPage;
+	var extensionUri = tm1CoreDefs.GlobalVars.g_extensionContextUri;
 
 	if (disableStartupPage) {
 		return;
 	}
 
-	var startupPath = path.join(__dirname, '..', '..', 'src', 'core', 'startupPage.txt');
-	vscode.workspace.openTextDocument(vscode.Uri.file(startupPath)).then((document) => {
-		vscode.window.showTextDocument(document);
-	});
+	const startupPanel = vscode.window.createWebviewPanel("startup", "vscode-tm1 Startup",
+								vscode.ViewColumn.Active,
+								{});
+	startupPanel.webview.html = startupPage.getStartupHTML(startupPanel.webview, extensionUri);
 }
 
 /*

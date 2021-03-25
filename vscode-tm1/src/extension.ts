@@ -6,6 +6,8 @@ import * as init from "./core/init"
 */
 export function activate(context: vscode.ExtensionContext)
 {
+	init.initVars(context);
+	init.openStartupPage();
 	init.initExt();
 }
 

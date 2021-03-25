@@ -12,6 +12,7 @@ import * as tm1NetDefs from "../net/netDefs";
 export class GlobalVars {
 	public static g_Config: tm1NetDefs.TM1Config;
 	public static g_isLoadLocalWorkspace: boolean = false;
+	public static g_extensionContextUri: vscode.Uri;
 }
 
 export enum TM1RuleExt {
