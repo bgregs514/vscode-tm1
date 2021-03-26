@@ -131,7 +131,8 @@ export class TM1TreeItem extends vscode.TreeItem {
 	constructor(label: string, fileExt: string)
 	{
 		super(label);
-		this.iconPath = path.join(__dirname, '..', '..', 'media', 'dark', this.getIconPath(fileExt));
+		this.iconPath = vscode.Uri.joinPath(GlobalVars.g_extensionContextUri, 'media', 'dark', this.getIconPath(fileExt));
+		console.log(GlobalVars.g_extensionContextUri.toString());
 	}
 
 	collapsibleState = 0;
