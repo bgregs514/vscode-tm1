@@ -1,7 +1,6 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
-import * as tm1Core from "../core/classDefs";
 import * as tm1CoreDefs from "../core/classDefs";
 import * as tm1NetDefs from "../net/netDefs";
 import * as tm1Notify from "../core/notify";

@@ -8,6 +8,7 @@ import * as tm1NetDefs from "../net/netDefs";
 import * as tm1Net from "../net/net";
 import * as connectionManager from "./../connectionManager";
 import * as startupPage from "../core/startupPage"
+import * as tm1Notify from "../core/notify";
 
 export function initExt()
 {
@@ -61,8 +62,17 @@ function registerCommands()
 		/* Tree view commands */
 		if (!commands.includes("vscode-tm1.saveObject")) {
 			vscode.commands.registerCommand("vscode-tm1.saveObject", (viewItem) => {
-				//console.log(viewItem)
-				tm1Core.sendTM1Object(viewItem);
+				if (!viewItem) {
+					var editor = vscode.window.activeTextEditor;
+					if (editor) {
+						viewItem = path.parse(editor.document.fileName).base;
+					}
+				}
+				if (viewItem) {
+					tm1Core.sendTM1Object(viewItem);
+				} else {
+					tm1Notify.notifyError("No file opened");
+				}
 			});
 		}
 
