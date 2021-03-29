@@ -1,7 +1,7 @@
 {
         "Name": "",
-        "PrologProcedure": "\r\n\r\n",
-        "MetadataProcedure": "\r\n\r\n",
-        "DataProcedure": "\r\n\r\n",
-        "EpilogProcedure": "\r\n\r\n"
+        "PrologProcedure": "\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n",
+        "MetadataProcedure": "\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n",
+        "DataProcedure": "\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n",
+        "EpilogProcedure": "\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n"
 }

@@ -5,3 +5,4 @@ vsc-extension-quickstart.md
 */node_modules/
 */out/
 */.vs/
+*/dist/

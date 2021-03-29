@@ -198,8 +198,8 @@ export async function createTM1Process()
 		return;
 	}
 
-	var procTemplatePath = path.join(__dirname, '..', '..', 'resources', "proc_template.json");
-	getFileData(procTemplatePath).then(response => {
+	var procTemplatePath = vscode.Uri.joinPath(tm1CoreDefs.GlobalVars.g_extensionContextUri, 'resources', 'proc_template.json');
+	getFileData(procTemplatePath.fsPath).then(response => {
 		var dataObj = JSON.parse(response);
 		dataObj.Name = procName;
 		createTM1Object(dataObj, tm1NetDefs.TM1CreateObject.process).then(() => {

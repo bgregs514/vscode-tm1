@@ -305,6 +305,13 @@
 				}
 			}
 		],
+		"keybindings": [
+			{
+				"command": "vscode-tm1.saveObject",
+				"key": "ctrl+shift+s",
+				"mac": "cmd+shift+s"
+			}
+		],
 		"menus": {
 			"editor/title/run": [
 				{
