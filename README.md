@@ -1,8 +1,11 @@
-# vscode-tm1
+# vscode-tm1 (Alpha)
 A Visual Studio Code Extension for TM1
 
 # What is this project?
 `vscode-tm1` (name subject to change) is a Visual Studio Code extension that leverages the TM1 Rest/VS Code APIs to bring a more native coding experience to the TM1 development space. This project is built on top of concepts and ideas from other projects, and is largely driven by community feedback and needs. **vscode-tm1 is and always will be free.**
+
+# What to expect
+This project is currently in `alpha` stage.  Bugs are to be expected, but please report them as you come across them!
 
 # What is the scope of this project?
 - Rule editing and saving

@@ -1,6 +1,5 @@
 import axios, {Method} from 'axios';
 import * as https from 'https';
-import { rejects } from 'node:assert';
 import * as tm1CoreDefs from "../core/classDefs";
 
 /*
