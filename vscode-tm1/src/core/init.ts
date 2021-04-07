@@ -10,23 +10,77 @@ import * as connectionManager from "./../connectionManager";
 import * as startupPage from "../core/startupPage"
 import * as tm1Notify from "../core/notify";
 
+const _onDidChangeFileDecorations: vscode.EventEmitter<any> = new vscode.EventEmitter<any>();
+
 export function initExt()
 {
-	registerCommands();
 	initLocalWorkspace();
 	loadObjectLists().then(() => {
 		populateTreeViews();
 	});
 }
 
+function refreshDecorator(uri: vscode.Uri)
+{
+	_onDidChangeFileDecorations.fire(uri);
+}
+
+function isChangeSource(uri: vscode.Uri): Promise<boolean>
+{
+	var fileString = path.parse(uri.fsPath).base;
+	return new Promise<boolean>((resolve, reject) => {
+		if (!path.parse(fileString).ext) {
+			reject(false);
+			return false;
+		}
+		tm1Core.getTM1Object(fileString).then((response) => {
+			tm1Core.getFileData(uri.fsPath).then((fileData) => {
+				if (fileData != response) {
+					resolve(true);
+				} else {
+					resolve(false);
+				}
+			}).catch(() => {
+				reject(false);
+			});
+		});
+	});
+}
+
 /*
 * initVars: Initialize global variables and other misc. things that don't belong in registerCommands
 */
-export function initVars(context: vscode.ExtensionContext)
+export async function initVars(context: vscode.ExtensionContext)
 {
         /* g_Config */
         tm1CoreDefs.GlobalVars.g_Config = <tm1NetDefs.TM1Config>{};
-        tm1Net.initTM1Config(context);
+       await tm1Net.initTM1Config(context);
+
+	/* File Decorators */
+	var resProv: vscode.FileDecorationProvider = {
+		provideFileDecoration: (uri: vscode.Uri, token: vscode.CancellationToken): Promise<vscode.FileDecoration | undefined> => {
+			//console.log(path.parse(uri.fsPath).base);
+			return isChangeSource(uri).then(isChanged => {
+				if (isChanged) {
+					//console.log("changed");
+					return {
+						badge: 'M',
+						color: new vscode.ThemeColor("gitDecoration.modifiedResourceForeground"),
+						tooltip: "User count"
+					};
+				}
+				return undefined;
+			});
+		},
+		onDidChangeFileDecorations: _onDidChangeFileDecorations.event
+	}
+	vscode.window.registerFileDecorationProvider(resProv);
+	/* Fire the decorator refresh check every time the document will be saved */
+	vscode.workspace.onWillSaveTextDocument(event => {
+		if (event.document.fileName) {
+			refreshDecorator(vscode.Uri.file(event.document.fileName));
+		}
+	});
 }
 
 /*
@@ -51,63 +105,55 @@ export function openStartupPage()
 /*
 * registerCommands: Register commands that the user (or another extension) may want to call directly
 */
-function registerCommands()
+export function registerCommands()
 {
 	vscode.commands.getCommands().then((commands) => {
 		/* Settings refresh command */
-		if (!commands.includes("vscode-tm1.refreshSettings")) {
-			vscode.commands.registerCommand("vscode-tm1.refreshSettings", () => {initExt();});
-		}
+		vscode.commands.registerCommand("vscode-tm1.refreshSettings", () => {initExt();});
 
 		/* Tree view commands */
-		if (!commands.includes("vscode-tm1.saveObject")) {
-			vscode.commands.registerCommand("vscode-tm1.saveObject", (viewItem) => {
-				if (!viewItem) {
-					var editor = vscode.window.activeTextEditor;
-					if (editor) {
-						viewItem = path.parse(editor.document.fileName).base;
-					}
+		vscode.commands.registerCommand("vscode-tm1.saveObject", async (viewItem) => {
+			if (!viewItem) {
+				var editor = vscode.window.activeTextEditor;
+				if (editor) {
+					await editor.document.save();
+					viewItem = path.parse(editor.document.fileName).base;
 				}
-				if (viewItem) {
-					tm1Core.sendTM1Object(viewItem);
-				} else {
-					tm1Notify.notifyError("No file opened");
-				}
-			});
-		}
+			}
+			if (viewItem) {
+				tm1Core.sendTM1Object(viewItem);
+			} else {
+				tm1Notify.notifyError("No file opened");
+			}
+		});
 
-		if (!commands.includes("vscode-tm1.deleteObject")) {
-			vscode.commands.registerCommand("vscode-tm1.deleteObject", (viewItem) => {
-				tm1Core.deleteTM1Object(viewItem);
-			});
-		}
+		vscode.commands.registerCommand("vscode-tm1.deleteObject", (viewItem) => {
+			tm1Core.deleteTM1Object(viewItem);
+		});
 
 		/* Process commands */
-		if (!commands.includes("vscode-tm1.runProcess")) {
-			vscode.commands.registerCommand("vscode-tm1.runProcess", (viewItem) => {
-				//console.log(viewItem);
-				/* Handle a run from the editor/title/run menu */
-				if (typeof viewItem != "string") {
-					viewItem = path.parse(viewItem["path"]).base;
-				}
-				tm1Core.runTM1Process(viewItem);
-			});
-		}
+		vscode.commands.registerCommand("vscode-tm1.runProcess", (viewItem) => {
+			//console.log(viewItem);
+			/* Handle a run from the editor/title/run menu */
+			if (typeof viewItem != "string") {
+				viewItem = path.parse(viewItem["path"]).base;
+			}
+			tm1Core.runTM1Process(viewItem);
+		});
 
-		if (!commands.includes("vscode-tm1.createProcess")) {
-			vscode.commands.registerCommand("vscode-tm1.createProcess", () => {
-				tm1Core.createTM1Process();
-			})
-		}
+		vscode.commands.registerCommand("vscode-tm1.modifyProcess", (viewItem) => {
+			var metaFile = path.parse(viewItem).name + tm1CoreDefs.TM1MetaExt.pro;
+			tm1Core.openNewDocument(metaFile);
+		});
+
+		vscode.commands.registerCommand("vscode-tm1.createProcess", () => {
+			tm1Core.createTM1Process();
+		})
 
 		/* Connection Manager commands */
-		if (!commands.includes("vscode-tm1.openAddConnectionScreen")) {
-			vscode.commands.registerCommand("vscode-tm1.openAddConnectionScreen", () => {connectionManager.openConnectionSettings()});
-		}
+		vscode.commands.registerCommand("vscode-tm1.openAddConnectionScreen", () => {connectionManager.openConnectionSettings()});
 
-		if (!commands.includes("vscode-tm1.refreshConnectionView")) {
-			vscode.commands.registerCommand("vscode-tm1.refreshConnectionView", () => {connectionManager.listConnections()});
-		}
+		vscode.commands.registerCommand("vscode-tm1.refreshConnectionView", () => {connectionManager.listConnections()});
 	});
 }
 
@@ -207,8 +253,8 @@ function createLocalWorkspaceFiles(type: string, tm1ReqObject: tm1NetDefs.TM1Req
 				var localWorkspace = config.localWorkspace;
 				
 				var extension = getFileExtension(type, element.Name);
-				var filePath = path.join(localWorkspace!, element.Name + extension);
 				var fileString = element.Name + extension;
+				var filePath = path.join(localWorkspace!, fileString);
 				
 				return tm1Core.getTM1Object(fileString).then((content) => {
 					if (!fs.existsSync(filePath)) {
@@ -219,6 +265,17 @@ function createLocalWorkspaceFiles(type: string, tm1ReqObject: tm1NetDefs.TM1Req
 								reject(error.message);
 							}
 							console.log("writing");
+							if (type == "process") {
+								tm1Core.getTM1Object(fileString, tm1NetDefs.TM1APICalls.getProcMetaData, "").then((response) => {
+									var metaFileString = element.Name + tm1CoreDefs.TM1MetaExt.pro;
+									var metaFilePath = path.join(localWorkspace!, metaFileString);
+									fs.writeFile(metaFilePath, JSON.stringify(response), (error) => {
+										if (error) {
+											console.log(error);
+										}
+									});
+								});
+							}
 							if (i === (response.value?.length! - 1)) {
 								resolve(content);
 							}

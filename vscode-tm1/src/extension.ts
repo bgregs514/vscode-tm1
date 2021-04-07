@@ -8,6 +8,7 @@ export function activate(context: vscode.ExtensionContext)
 {
 	init.initVars(context);
 	init.openStartupPage();
+	init.registerCommands();
 	init.initExt();
 }
 

@@ -168,6 +168,12 @@
 					".prox"
 				],
 				"configuration": "./language-configuration.json"
+			},
+			{
+				"id": "json",
+				"extensions": [
+					".ti"
+				]
 			}
 		],
 		"grammars": [
@@ -288,6 +294,10 @@
 				"icon": "media/dark/play.svg"
 			},
 			{
+				"command": "vscode-tm1.modifyProcess",
+				"title": "Modify Process"
+			},
+			{
 				"command": "vscode-tm1.createProcess",
 				"title": "Create Process",
 				"icon": "media/dark/add.svg"
@@ -350,6 +360,10 @@
 				{
 					"command": "vscode-tm1.deleteObject",
 					"when": "view == procList || view == proxList || view == cubList || view == rulxlist"
+				},
+				{
+					"command": "vscode-tm1.modifyProcess",
+					"when": "view == procList || view == proxList"
 				}
 			]
 		}

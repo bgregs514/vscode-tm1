@@ -25,6 +25,10 @@ export enum TM1ProcExt {
 	prox = ".prox"
 }
 
+export enum TM1MetaExt {
+	pro = ".ti"
+}
+
 /*
 * TM1File: Helper class that handles breaking a given file name into useful attributes
 */
@@ -128,11 +132,16 @@ export class TM1ObjectProvider implements vscode.TreeDataProvider<tm1NetDefs.TM1
 * TM1TreeItem: Custom TreeItem class to define contextValue and other attributes
 */
 export class TM1TreeItem extends vscode.TreeItem {
+	private fileName: string = "";
+	private fileExt: string = "";
 	constructor(label: string, fileExt: string)
 	{
 		super(label);
+		this.fileName = label;
+		this.fileExt = fileExt;
 		this.iconPath = vscode.Uri.joinPath(GlobalVars.g_extensionContextUri, 'media', 'dark', this.getIconPath(fileExt));
-		console.log(GlobalVars.g_extensionContextUri.toString());
+		//console.log(vscode.Uri.file(path.join(GlobalVars.g_Config.localWorkspace!, this.fileName + this.fileExt)).path);
+		this.resourceUri = vscode.Uri.file(path.join(GlobalVars.g_Config.localWorkspace!, this.fileName + this.fileExt));
 	}
 
 	collapsibleState = 0;

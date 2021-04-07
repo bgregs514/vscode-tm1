@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import * as tm1NetDefs from "../net/netDefs";
 import * as tm1CoreDefs from "../core/classDefs";
 
-export function initTM1Config(context: vscode.ExtensionContext)
+export function initTM1Config(context: vscode.ExtensionContext): Promise<void>
 {
         var settings = vscode.workspace.getConfiguration("vscode-tm1");
         var config: tm1NetDefs.TM1Config = tm1CoreDefs.GlobalVars.g_Config;
@@ -30,4 +30,6 @@ export function initTM1Config(context: vscode.ExtensionContext)
         }
         tm1CoreDefs.GlobalVars.g_Config.baseURL = "https://" + config.hostname + ":" + config.httpPortNumber + "/api/v1/";
         tm1CoreDefs.GlobalVars.g_extensionContextUri = context.extensionUri;
+
+        return new Promise((resolve, reject) => {resolve();});
 }

@@ -18,7 +18,8 @@ export enum TM1APIMethod {
 */
 export enum TM1APICalls {
 	default = "?$select=",
-	getParams = "?$select=Parameters"
+	getParams = "?$select=Parameters",
+	getProcMetaData = "?$select=Attributes,DataSource,HasSecurityAccess,Name,Parameters,Variables"
 }
 
 export enum TM1CreateObject {
@@ -101,7 +102,8 @@ export class TM1ReqObject {
 			}),
 			headers: {
 				"Content-Type": "application/json",
-				"Authorization": config.encodedCreds
+				"Authorization": config.encodedCreds,
+				"Accept": "*/*;odata.metadata=none"
 			},
 			method: this.method,
 			url: encodeURI(config.baseURL + this.apiCall),

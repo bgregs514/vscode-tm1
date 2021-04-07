@@ -29,7 +29,10 @@ export function openNewDocument(fileString: string)
 	var file = getFilePath(fileString);
 
 	vscode.workspace.openTextDocument(file).then(document => {
-		vscode.window.showTextDocument(document);
+		vscode.window.showTextDocument(document).then(() => {
+			console.log("formatted");
+			vscode.commands.executeCommand("editor.action.formatDocument");
+		});
 	});
 }
 
@@ -44,7 +47,7 @@ export function getTM1Object(string: string, arg0?: tm1NetDefs.TM1APICalls, arg1
 	var req: tm1NetDefs.TM1ReqObject = new tm1NetDefs.TM1ReqObject();
 	var index: string = "";
 
-	if (!arg0) {
+	if (!arg0 && !arg1) {
 		req.apiCall = fileName.apiPrefix + "('" + fileName.name + "')" + tm1NetDefs.TM1APICalls.default + fileName.apiPostAttr;
 		index = fileName.apiPostAttr;
 	} else {
@@ -53,6 +56,9 @@ export function getTM1Object(string: string, arg0?: tm1NetDefs.TM1APICalls, arg1
 	}
 
 	return req.execute().then(response => {
+		if (!index) {
+			return response;
+		}
 		return response[index];
 	}).catch((error) => {
 		console.log(error);
@@ -84,7 +90,7 @@ export function sendTM1Object(fileString: string)
 	});
 }
 
-function getFileData(file: string): Promise<any>
+export function getFileData(file: string): Promise<any>
 {
 	return new Promise<any>((resolve, reject) => {
 		return fs.readFile(file, "utf-8", (error, data) =>
